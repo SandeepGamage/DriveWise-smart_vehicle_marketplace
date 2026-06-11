@@ -1,7 +1,39 @@
+import axios from 'axios';
 import Advert from '../models/advertModel.js';
 
+const PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL || 'http://127.0.0.1:3000/api/predict';
 
-// CREATE - Add new advertisement
+const getPredictedPrice = async (vehicleData) => {
+    try {
+        // Map advertisement fields to prediction service fields
+        const predictionPayload = {
+            make: vehicleData.vehicleName,           // Brand/Make (e.g., 'BMW')
+            model: vehicleData.model,                 // Model (e.g., '320d')
+            mileage_km: vehicleData.mileage || 0,    // Mileage in km
+            production_year: vehicleData.ManufactureYear || new Date().getFullYear(),  // Year
+            power_hp: vehicleData.power_hp || 150,   // Horsepower (optional, default 150)
+            transmission: vehicleData.transmission    // Transmission type
+        };
+
+        const response = await axios.post(PREDICTION_SERVICE_URL, predictionPayload, {
+            timeout: 5000  // 5 second timeout
+        });
+
+        if (response.data.success) {
+            return Math.round(response.data['predicted_price(euro)'] * 1.1);  // Convert to local currency with 10% markup
+        } else {
+            console.warn('Prediction service returned false success');
+            return null;
+        }
+    } catch (error) {
+        console.warn('Error calling prediction service:', error.message);
+        console.warn('Prediction service URL:', PREDICTION_SERVICE_URL);
+        // Return null if prediction fails - user should provide predictedPrice manually
+        return null;
+    }
+};
+
+
 export const createAdvertisement = async (req, res) => {
     try {
         const {
@@ -20,12 +52,29 @@ export const createAdvertisement = async (req, res) => {
             userId
         } = req.body;
 
-        // Validate required fields
+  
         if (!title || !description || !vehicleName || !price || !userId) {
             return res.status(400).json({
                 success: false,
                 message: 'Please provide all required fields'
             });
+        }
+
+        // ⭐ AUTO-GENERATE PREDICTED PRICE if not provided
+        let finalPredictedPrice = predictedPrice;
+
+        if (!finalPredictedPrice) {
+            console.log('🔮 Fetching predicted price from ML service...');
+            finalPredictedPrice = await getPredictedPrice({
+                vehicleName,
+                model,
+                mileage,
+                ManufactureYear,
+                transmission
+            });
+
+            // If prediction fails, use price as fallback
+            finalPredictedPrice = finalPredictedPrice || Math.round(price * 1.05);
         }
 
         const newAdvert = new Advert({
@@ -40,7 +89,7 @@ export const createAdvertisement = async (req, res) => {
             color,
             images,
             model,
-            predictedPrice,
+            predictedPrice: finalPredictedPrice, 
             userId,
             isActive: true
         });
@@ -49,7 +98,7 @@ export const createAdvertisement = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: 'Advertisement created successfully',
+            message: 'Advertisement created successfully (predicted price auto-generated)',
             data: savedAdvert
         });
     } catch (error) {
@@ -201,6 +250,30 @@ export const updateAdvertisement = async (req, res) => {
         // Don't allow updating isActive directly in this endpoint
         delete updateData.isActive;
 
+        // Check if vehicle specs changed (which would affect predicted price)
+        const vehicleSpecsChanged = updateData.vehicleName || updateData.model || 
+                                    updateData.mileage || updateData.ManufactureYear || 
+                                    updateData.transmission;
+
+        // ⭐ AUTO-RECALCULATE PREDICTED PRICE if specs changed
+        if (vehicleSpecsChanged && !updateData.predictedPrice) {
+            const currentAd = await Advert.findById(id);
+            if (currentAd) {
+                console.log('🔄 Vehicle specs changed - recalculating predicted price...');
+                const newPredictedPrice = await getPredictedPrice({
+                    vehicleName: updateData.vehicleName || currentAd.vehicleName,
+                    model: updateData.model || currentAd.model,
+                    mileage: updateData.mileage || currentAd.mileage,
+                    ManufactureYear: updateData.ManufactureYear || currentAd.ManufactureYear,
+                    transmission: updateData.transmission || currentAd.transmission
+                });
+
+                updateData.predictedPrice = newPredictedPrice || Math.round(
+                    (updateData.price || currentAd.price) * 1.05
+                );
+            }
+        }
+
         updateData.updatedAt = new Date();
 
         const updatedAdvert = await Advert.findByIdAndUpdate(
@@ -218,7 +291,7 @@ export const updateAdvertisement = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Advertisement updated successfully',
+            message: 'Advertisement updated successfully' + (vehicleSpecsChanged ? ' (predicted price recalculated)' : ''),
             data: updatedAdvert
         });
     } catch (error) {

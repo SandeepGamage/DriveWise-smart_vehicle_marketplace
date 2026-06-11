@@ -21,11 +21,15 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 });
 
 // Routes
-app.use("/api", advertRoutes);
+app.use("/api/advertisement", advertRoutes);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
-    res.status(200).json({ message: "Server is running" });
+    res.status(200).json({ 
+        message: "Server is running",
+        timestamp: new Date().toISOString(),
+        predictiveServiceURL: process.env.PREDICTION_SERVICE_URL || 'http://localhost:5000/api/predict'
+    });
 });
 
 app.listen(process.env.PORT || 3000, () => {

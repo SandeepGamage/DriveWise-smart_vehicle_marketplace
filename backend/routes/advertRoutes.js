@@ -1,5 +1,7 @@
 import express from 'express';
-import {createAdvertisement,
+import {
+    // Advertisement endpoints
+    createAdvertisement,
     getAllAdvertisements,
     getActiveAdvertisements,
     getAdvertisementById,
@@ -9,15 +11,21 @@ import {createAdvertisement,
     toggleAdvertisementStatus,
 } from '../controllers/adveController.js';
 
-const router = express.Router();
+const advertRoutes = express.Router();
 
-router.post('/advertisements', createAdvertisement);
-router.get('/advertisements', getAllAdvertisements);
-router.get('/advertisements/active', getActiveAdvertisements);
-router.get('/advertisements/:id', getAdvertisementById);
-router.get('/advertisements/user/:userId', getAdvertisementsByUser);
-router.put('/advertisements/:id', updateAdvertisement);
-router.patch('/advertisements/:id/toggle-status', toggleAdvertisementStatus);
-router.delete('/advertisements/:id', deleteAdvertisement);
+advertRoutes.post('/advertisements', createAdvertisement);
 
-export default router;
+advertRoutes.get('/advertisements', getAllAdvertisements);
+
+advertRoutes.get('/advertisements/active', getActiveAdvertisements);
+
+advertRoutes.get('/advertisements/:id', getAdvertisementById);
+
+advertRoutes.get('/advertisements/user/:userId', getAdvertisementsByUser);
+
+advertRoutes.put('/advertisements/:id', updateAdvertisement);
+advertRoutes.patch('/advertisements/:id/toggle-status', toggleAdvertisementStatus);
+
+advertRoutes.delete('/advertisements/:id', deleteAdvertisement);
+
+export default advertRoutes;
