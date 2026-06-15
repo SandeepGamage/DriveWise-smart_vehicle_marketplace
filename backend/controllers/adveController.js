@@ -1,38 +1,48 @@
 import axios from 'axios';
 import Advert from '../models/advertModel.js';
 
-const PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL || 'http://127.0.0.1:3000/api/predict';
+// The URL of your Python Flask microservice (now on Port 5000)
+const PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL ||  'http://127.0.0.1:5000/api/predict';
+
+// Define a stable standard exchange rate conversion factor (1 Euro ≈ 325 LKR)
+// You can adjust this value based on current central bank metrics
+const EURO_TO_LKR_RATE = 325.0; 
 
 const getPredictedPrice = async (vehicleData) => {
     try {
-        // Map advertisement fields to prediction service fields
+        // Map your form fields to what your Python pipeline expects
         const predictionPayload = {
-            make: vehicleData.vehicleName,           // Brand/Make (e.g., 'BMW')
-            model: vehicleData.model,                 // Model (e.g., '320d')
-            mileage_km: vehicleData.mileage || 0,    // Mileage in km
-            production_year: vehicleData.ManufactureYear || new Date().getFullYear(),  // Year
-            power_hp: vehicleData.power_hp || 150,   // Horsepower (optional, default 150)
-            transmission: vehicleData.transmission    // Transmission type
+            make: vehicleData.vehicleName,           
+            model: vehicleData.model,                 
+            mileage_km: Number(vehicleData.mileage) || 0,    
+            production_year: Number(vehicleData.ManufactureYear) || new Date().getFullYear(),  
+            power_hp: 150, // Default baseline power used during model training
+            transmission: vehicleData.transmission    
         };
 
+        // Call your Python Flask Service
         const response = await axios.post(PREDICTION_SERVICE_URL, predictionPayload, {
-            timeout: 5000  // 5 second timeout
+            timeout: 5000  
         });
 
         if (response.data.success) {
-            return Math.round(response.data['predicted_price(euro)'] * 1.1);  // Convert to local currency with 10% markup
+            // 1. Extract the raw Euro valuation from Python
+            const priceInEuro = response.data['predicted_price(euro)'];
+
+            // 2. Convert it directly to LKR and add a 10% market adjustment markup
+            const priceInLKR = priceInEuro * EURO_TO_LKR_RATE * 1.10;
+
+            // 3. Return the clean rounded value
+            return Math.round(priceInLKR);  
         } else {
-            console.warn('Prediction service returned false success');
+            console.warn('Prediction service returned success: false');
             return null;
         }
     } catch (error) {
         console.warn('Error calling prediction service:', error.message);
-        console.warn('Prediction service URL:', PREDICTION_SERVICE_URL);
-        // Return null if prediction fails - user should provide predictedPrice manually
         return null;
     }
 };
-
 
 export const createAdvertisement = async (req, res) => {
     try {
@@ -52,7 +62,7 @@ export const createAdvertisement = async (req, res) => {
             userId
         } = req.body;
 
-  
+        // Validation guard clause
         if (!title || !description || !vehicleName || !price || !userId) {
             return res.status(400).json({
                 success: false,
@@ -60,11 +70,11 @@ export const createAdvertisement = async (req, res) => {
             });
         }
 
-        // ⭐ AUTO-GENERATE PREDICTED PRICE if not provided
         let finalPredictedPrice = predictedPrice;
 
+        // If a prediction hasn't been cached yet, fetch it now
         if (!finalPredictedPrice) {
-            console.log('🔮 Fetching predicted price from ML service...');
+            console.log('🔮 Fetching and converting predicted price from ML service...');
             finalPredictedPrice = await getPredictedPrice({
                 vehicleName,
                 model,
@@ -73,15 +83,16 @@ export const createAdvertisement = async (req, res) => {
                 transmission
             });
 
-            // If prediction fails, use price as fallback
+            // Fallback: If Python server is offline, use the user's asking price + 5% safety margin
             finalPredictedPrice = finalPredictedPrice || Math.round(price * 1.05);
         }
 
+        // Create document instance matching your Mongoose Schema structure
         const newAdvert = new Advert({
             title,
             description,
             vehicleName,
-            price,
+            price, // Stored in LKR as entered by user
             ManufactureYear,
             mileage,
             fuelType,
@@ -89,7 +100,7 @@ export const createAdvertisement = async (req, res) => {
             color,
             images,
             model,
-            predictedPrice: finalPredictedPrice, 
+            predictedPrice: finalPredictedPrice, // Now safely saved in LKR!
             userId,
             isActive: true
         });
@@ -98,7 +109,7 @@ export const createAdvertisement = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: 'Advertisement created successfully (predicted price auto-generated)',
+            message: 'Advertisement created successfully (Predicted price converted to LKR)',
             data: savedAdvert
         });
     } catch (error) {

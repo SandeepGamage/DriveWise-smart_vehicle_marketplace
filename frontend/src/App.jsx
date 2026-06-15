@@ -1,28 +1,39 @@
-import { useState } from 'react'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import CreateAdvertisement from './pages/advertisement/CreateAdvertisement.jsx';
 
-import './App.css'
+
+// Mock components for path visualization - replace with your actual pages later!
+const Dashboard = () => (
+    <div className="p-10 bg-slate-900 text-white min-h-screen">
+        <h1 className="text-2xl font-bold text-blue-500">Vehicle Marketplace Dashboard</h1>
+        <p className="text-slate-400 mt-2">Active browse listings will load here.</p>
+    </div>
+);
 
 function App() {
-  const [count, setCount] = useState(0)
+    return (
+        <Router>
+            <Routes>
+                {/* Home / Default route redirection */}
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-  return (
-    <>
-      <div className="App">
-        <h1 className="text-4xl font-bold underline text-fuchsia-700">
-          Hello world!
-        </h1>
-        <p className="text-lg text-gray-600">
-          This is a sample React application with Tailwind CSS.
-        </p>
-        <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={() => setCount(count + 1)}
-        >
-          Count: {count}
-        </button>
-      </div>
-    </>
-  )
+                {/* Main Marketplace browsing feed */}
+                <Route path="/dashboard" element={<Dashboard />} />
+
+                {/* Form to list vehicles and run ML predictive logic */}
+                <Route path="/create-ad" element={<CreateAdvertisement />} />
+
+                {/* Fallback 404 Route for unmatched paths */}
+                <Route path="*" element={
+                    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white">
+                        <h1 className="text-4xl font-black text-rose-500">404</h1>
+                        <p className="text-slate-400 mt-2">The route configuration path does not exist.</p>
+                    </div>
+                } />
+            </Routes>
+        </Router>
+    );
 }
 
-export default App
+export default App;
