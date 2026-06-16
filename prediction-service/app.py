@@ -17,10 +17,9 @@ pipeline = joblib.load(MODEL_PATH)
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
-        # Extract incoming vehicle specs sent from Node/React
-        data = request.get_json()
         
-        # Structure payload into a DataFrame matching your model's exact expected inputs
+        data = request.get_json()
+      
         input_data = pd.DataFrame([{
             'make': data.get('make'),
             'model': data.get('model'),
