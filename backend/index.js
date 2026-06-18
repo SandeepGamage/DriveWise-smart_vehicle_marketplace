@@ -4,6 +4,8 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import multer from "multer";
+import userRoute from "./routes/userRoute.js";
 import advertRoutes from "./routes/advertRoutes.js";
 
 dotenv.config();
@@ -20,7 +22,9 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log("Database connection failed:", err);
 });
 
-// Routes
+const storage = multer.memoryStorage();
+
+app.use("/api/user", userRoute);
 app.use("/api/advertisement", advertRoutes);
 
 // Health check endpoint
@@ -32,6 +36,6 @@ app.get("/health", (req, res) => {
     });
 });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Server running on port", process.env.PORT || 3000);
+app.listen(process.env.PORT, () => {
+    console.log("Server running on port " , process.env.PORT)
 });
