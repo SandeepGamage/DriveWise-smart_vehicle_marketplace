@@ -33,6 +33,7 @@ const CreateAdvertisement = () => {
 
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState('');
+    const [manualUrl, setManualUrl] = useState('');
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -67,6 +68,18 @@ const CreateAdvertisement = () => {
         });
     };
 
+    const handleAddUrl = () => {
+        if (!manualUrl.trim()) return;
+        setFormData(prev => {
+            const currentImages = prev.images.filter(img => !img.includes('placehold.co'));
+            return {
+                ...prev,
+                images: [...currentImages, manualUrl.trim()]
+            };
+        });
+        setManualUrl('');
+    };
+
     // 🔮 Real-time Background Engine Debouncer
     useEffect(() => {
         const fetchLiveValuation = async () => {
@@ -84,7 +97,7 @@ const CreateAdvertisement = () => {
 
                     // Hits the clean proxy route to avoid schema checks and MongoDB writes while typing
                     const res = await axios.post('http://localhost:3000/api/advertisement/predict-price', evaluationPayload);
-                    
+
                     if (res.data.success) {
                         setAutoPredictedPrice(res.data.predictedPrice);
                     }
@@ -143,9 +156,8 @@ const CreateAdvertisement = () => {
                 </div>
 
                 {responseMessage.text && (
-                    <div className={`p-4 rounded-xl mb-6 text-sm font-bold border ${
-                        responseMessage.type === 'success' ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800' : 'bg-rose-950/40 text-rose-400 border-rose-800'
-                    }`}>{responseMessage.text}</div>
+                    <div className={`p-4 rounded-xl mb-6 text-sm font-bold border ${responseMessage.type === 'success' ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800' : 'bg-rose-950/40 text-rose-400 border-rose-800'
+                        }`}>{responseMessage.text}</div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -161,12 +173,12 @@ const CreateAdvertisement = () => {
                         <div>
                             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Vehicle Gallery / Images</label>
                             <div className="relative border-2 border-dashed border-slate-700 hover:border-blue-500/80 rounded-2xl p-6 transition-all duration-200 bg-slate-900/50 flex flex-col items-center justify-center text-center group">
-                                <input 
-                                    type="file" 
-                                    accept="image/*" 
-                                    onChange={handleImageUpload} 
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
                                     disabled={uploading}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10" 
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
                                 />
                                 <div className="space-y-2 pointer-events-none">
                                     <div className="text-3xl transition-transform group-hover:scale-110 duration-200">
@@ -190,7 +202,7 @@ const CreateAdvertisement = () => {
                                         <div key={idx} className="relative aspect-video rounded-xl overflow-hidden bg-slate-900 border border-slate-800 group shadow-md">
                                             <img src={imgUrl} alt={`Vehicle preview ${idx + 1}`} className="w-full h-full object-cover" />
                                             {!isPlaceholder && (
-                                                <button 
+                                                <button
                                                     type="button"
                                                     onClick={() => handleRemoveImage(idx)}
                                                     className="absolute top-2 right-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full p-1.5 text-xs shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-1 group-hover:translate-y-0"
@@ -210,19 +222,19 @@ const CreateAdvertisement = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Brand / Make *</label>
-                                <select 
-                                    required 
-                                    name="vehicleName" 
-                                    value={formData.vehicleName} 
+                                <select
+                                    required
+                                    name="vehicleName"
+                                    value={formData.vehicleName}
                                     onChange={(e) => {
                                         const selectedBrand = e.target.value;
                                         const models = brandModelMap[selectedBrand] || [];
-                                        setFormData(prev => ({ 
-                                            ...prev, 
-                                            vehicleName: selectedBrand, 
-                                            model: models.length > 0 ? models[0] : '' 
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            vehicleName: selectedBrand,
+                                            model: models.length > 0 ? models[0] : ''
                                         }));
-                                    }} 
+                                    }}
                                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 text-sm"
                                 >
                                     <option value="">Select Brand</option>
@@ -233,11 +245,11 @@ const CreateAdvertisement = () => {
                             </div>
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Model Family *</label>
-                                <select 
-                                    required 
-                                    name="model" 
-                                    value={formData.model} 
-                                    onChange={handleChange} 
+                                <select
+                                    required
+                                    name="model"
+                                    value={formData.model}
+                                    onChange={handleChange}
                                     disabled={!formData.vehicleName}
                                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 text-sm disabled:opacity-50"
                                 >
@@ -317,7 +329,7 @@ const CreateAdvertisement = () => {
                                 </span>
                                 {autoPredictedPrice && formData.price && (
                                     <span className={`text-[10px] font-bold block mt-1 ${Number(formData.price) > autoPredictedPrice ? 'text-amber-400' : 'text-sky-400'}`}>
-                                        {Number(formData.price) > autoPredictedPrice 
+                                        {Number(formData.price) > autoPredictedPrice
                                             ? `⚠️ ${(Number(formData.price) - autoPredictedPrice).toLocaleString()} LKR over market evaluation`
                                             : `✓ ${(autoPredictedPrice - Number(formData.price)).toLocaleString()} LKR under market evaluation`}
                                     </span>

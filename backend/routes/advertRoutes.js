@@ -17,7 +17,7 @@ const advertRoutes = express.Router();
 // 🔮 NEW: Dedicated Live Valuation Endpoint (Bypasses MongoDB)
 advertRoutes.post('/predict-price', async (req, res) => {
     try {
-        const { vehicleName, model, mileage, ManufactureYear, transmission } = req.body;
+        const { vehicleName, model, mileage, ManufactureYear, transmission, powerHp } = req.body;
 
         const PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL || 'http://127.0.0.1:5000/api/predict';
         const EURO_TO_LKR_RATE = 325.0;
@@ -27,7 +27,7 @@ advertRoutes.post('/predict-price', async (req, res) => {
             model: model,                 
             mileage_km: Number(mileage) || 0,    
             production_year: Number(ManufactureYear) || new Date().getFullYear(),  
-            power_hp: 150, 
+            power_hp: Number(powerHp) || 150, 
             transmission: transmission    
         };
 
