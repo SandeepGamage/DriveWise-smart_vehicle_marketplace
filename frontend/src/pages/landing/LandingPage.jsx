@@ -12,9 +12,15 @@ import {
 
 const LandingPage = () => {
     return (
-        <div className="space-y-20 pb-20 transition-colors duration-300">
-            {/* Hero Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8">
+        <div className="relative space-y-24 pb-20 transition-colors duration-300">
+            {/* Floating Colorful Backdrop Blobs for Glass Blending */}
+            <div className="absolute top-[-10%] left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-pink-500/15 via-purple-500/15 to-warm-accent/15 blur-[120px] -z-10 animate-pulse duration-[8000ms]"></div>
+            <div className="absolute top-[25%] right-[5%] w-[550px] h-[550px] rounded-full bg-gradient-to-br from-amber-400/10 via-rose-400/10 to-indigo-500/10 blur-[130px] -z-10 animate-pulse duration-[12000ms]"></div>
+            <div className="absolute top-[50%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-blue-400/10 via-teal-400/10 to-purple-400/10 blur-[150px] -z-10"></div>
+            <div className="absolute bottom-[5%] right-[10%] w-[500px] h-[500px] rounded-full bg-gradient-to-bl from-indigo-500/15 via-purple-500/10 to-pink-500/15 blur-[110px] -z-10"></div>
+
+            {/* Hero Section (Warm gradient glassmorphic panel) */}
+            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8 p-8 sm:p-12 rounded-[3rem] bg-gradient-to-tr from-white/70 via-sand-100/50 to-warm-accent/5 border border-white/40 backdrop-blur-sm shadow-sm">
                 {/* Hero Text Info */}
                 <div className="lg:col-span-6 space-y-6">
                     <div className="inline-flex items-center gap-2 bg-white border border-sand-300/50 rounded-full px-4.5 py-2 shadow-sm">
@@ -71,8 +77,8 @@ const LandingPage = () => {
                     <div className="absolute -top-12 -left-12 w-72 h-72 rounded-full bg-warm-accent/10 blur-3xl -z-10"></div>
                     <div className="absolute -bottom-12 -right-12 w-72 h-72 rounded-full bg-warm-dark/5 blur-3xl -z-10"></div>
 
-                    {/* Clean Mockup Container */}
-                    <div className="bg-white border border-sand-300/50 p-6 rounded-[2.5rem] shadow-sm space-y-6">
+                    {/* Clean Mockup Container (Glass) */}
+                    <div className="bg-white/85 backdrop-blur-md border border-white/50 p-6 rounded-[2.5rem] shadow-lg space-y-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                         {/* Title Mock */}
                         <div className="flex items-center justify-between border-b border-sand-200 pb-4">
                             <div className="flex items-center gap-2">
@@ -128,8 +134,8 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            {/* How It Works Section */}
-            <div className="space-y-12">
+            {/* How It Works Section (Cool gradient glassmorphic panel) */}
+            <div className="relative space-y-12 p-8 sm:p-12 rounded-[3rem] bg-gradient-to-br from-white/70 via-sand-100/50 to-blue-500/5 border border-white/40 backdrop-blur-sm shadow-sm">
                 <div className="text-center max-w-xl mx-auto space-y-2">
                     <h2 className="text-3xl font-black text-warm-dark tracking-tight">How DriveWise Calibrates Your Search</h2>
                     <p className="text-slate-500 text-sm">We combine a high-utility directory with live predictive pricing services to find authentic deals.</p>
@@ -137,7 +143,7 @@ const LandingPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Feature Card 1 */}
-                    <div className="bg-white border border-sand-300/50 p-8 rounded-[2rem] shadow-sm space-y-4 hover:shadow-md transition-shadow">
+                    <div className="bg-white/85 backdrop-blur-md border border-white/50 p-8 rounded-[2rem] shadow-sm space-y-4 hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300">
                         <div className="w-10 h-10 rounded-2xl bg-sand-100 border border-sand-200 text-warm-accent flex items-center justify-center shadow-inner">
                             <FaSlidersH className="text-lg" />
                         </div>
@@ -148,7 +154,7 @@ const LandingPage = () => {
                     </div>
 
                     {/* Feature Card 2 */}
-                    <div className="bg-white border border-sand-300/50 p-8 rounded-[2rem] shadow-sm space-y-4 hover:shadow-md transition-shadow">
+                    <div className="bg-white/85 backdrop-blur-md border border-white/50 p-8 rounded-[2rem] shadow-sm space-y-4 hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300">
                         <div className="w-10 h-10 rounded-2xl bg-sand-100 border border-sand-200 text-warm-accent flex items-center justify-center shadow-inner">
                             <FaBrain className="text-lg" />
                         </div>
@@ -159,7 +165,7 @@ const LandingPage = () => {
                     </div>
 
                     {/* Feature Card 3 */}
-                    <div className="bg-white border border-sand-300/50 p-8 rounded-[2rem] shadow-sm space-y-4 hover:shadow-md transition-shadow">
+                    <div className="bg-white/85 backdrop-blur-md border border-white/50 p-8 rounded-[2rem] shadow-sm space-y-4 hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300">
                         <div className="w-10 h-10 rounded-2xl bg-sand-100 border border-sand-200 text-warm-accent flex items-center justify-center shadow-inner">
                             <FaShieldAlt className="text-lg" />
                         </div>
@@ -171,9 +177,10 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            {/* Interactive Call-To-Action Banner (Contrast Dark Container) */}
-            <div className="bg-warm-dark text-white rounded-[3rem] p-12 text-center space-y-6 shadow-xl border border-white/5 relative overflow-hidden">
-                <div className="absolute -top-12 -left-12 w-64 h-64 rounded-full bg-warm-accent/5 blur-2xl"></div>
+            {/* Interactive Call-To-Action Banner (Vibrant Neon Gradient Container) */}
+            <div className="bg-gradient-to-r from-warm-dark via-warm-dark-card to-indigo-950 text-white rounded-[3rem] p-12 sm:p-16 text-center space-y-6 shadow-2xl border border-white/10 relative overflow-hidden">
+                <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-warm-accent/20 blur-3xl"></div>
+                <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-indigo-500/20 blur-3xl"></div>
 
                 <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight max-w-xl mx-auto">
                     Ready to Calibrate Pricing for Your Vehicle?
