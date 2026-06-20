@@ -63,7 +63,7 @@ const AdvertisementDetails = () => {
         return (
             <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
                 <div className="w-12 h-12 border-4 border-warm-accent border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-slate-500 text-sm font-bold animate-pulse">Synchronizing listing specifications matrix...</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm font-bold animate-pulse">Synchronizing listing specifications matrix...</p>
             </div>
         );
     }
@@ -72,11 +72,11 @@ const AdvertisementDetails = () => {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-6 max-w-md mx-auto">
                 <span className="text-5xl animate-bounce">📁</span>
-                <h2 className="text-xl font-black text-rose-600">Listing Unreachable</h2>
-                <p className="text-slate-500 text-xs leading-relaxed">
+                <h2 className="text-xl font-black text-rose-600 dark:text-rose-455">Listing Unreachable</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
                     {errorMsg || "The selected vehicle advertisement could not be loaded. It may have been sold or removed."}
                 </p>
-                <Link to="/dashboard" className="bg-warm-dark border border-transparent hover:bg-warm-dark-card px-6 py-3 rounded-full text-xs font-black text-white transition-all uppercase tracking-widest shadow-sm flex items-center gap-2">
+                <Link to="/dashboard" className="bg-warm-dark dark:bg-warm-accent border border-transparent hover:bg-warm-dark-card dark:hover:bg-warm-accent-hover px-6 py-3 rounded-full text-xs font-black text-white dark:text-warm-dark transition-all uppercase tracking-widest shadow-sm flex items-center gap-2">
                     <FaArrowLeft />
                     <span>Browse Marketplace</span>
                 </Link>
@@ -117,14 +117,14 @@ const AdvertisementDetails = () => {
         <div className="space-y-8 pb-16 transition-colors duration-300">
             {/* Header Toolbar */}
             <div className="flex items-center justify-between">
-                <Link to="/dashboard" className="text-warm-dark/70 hover:text-warm-dark text-xs font-black uppercase tracking-wider flex items-center gap-2 group transition-colors">
+                <Link to="/dashboard" className="text-warm-dark/70 dark:text-slate-300 hover:text-warm-dark dark:hover:text-white text-xs font-black uppercase tracking-wider flex items-center gap-2 group transition-colors">
                     <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
                     <span>Back to Marketplace</span>
                 </Link>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => setIsBookmarked(!isBookmarked)}
-                        className="bg-white hover:bg-sand-100 text-warm-dark border border-sand-300/60 font-bold px-4 py-2.5 rounded-full transition-all shadow-sm flex items-center gap-2 text-xs cursor-pointer"
+                        className="bg-white dark:bg-slate-800 hover:bg-sand-100 dark:hover:bg-slate-700 text-warm-dark dark:text-slate-300 border border-sand-300/60 dark:border-slate-700/60 font-bold px-4 py-2.5 rounded-full transition-all shadow-sm flex items-center gap-2 text-xs cursor-pointer"
                     >
                         {isBookmarked ? <FaBookmark className="text-rose-500" /> : <FaRegBookmark />}
                         <span>{isBookmarked ? 'Bookmarked' : 'Save ad'}</span>
@@ -134,7 +134,7 @@ const AdvertisementDetails = () => {
                             navigator.clipboard.writeText(window.location.href);
                             alert('Link copied to clipboard!');
                         }}
-                        className="bg-white hover:bg-sand-100 text-warm-dark border border-sand-300/60 font-bold px-4 py-2.5 rounded-full transition-all shadow-sm flex items-center gap-2 text-xs cursor-pointer"
+                        className="bg-white dark:bg-slate-800 hover:bg-sand-100 dark:hover:bg-slate-700 text-warm-dark dark:text-slate-300 border border-sand-300/60 dark:border-slate-700/60 font-bold px-4 py-2.5 rounded-full transition-all shadow-sm flex items-center gap-2 text-xs cursor-pointer"
                     >
                         <FaShareAlt />
                         <span>Share</span>
@@ -148,7 +148,7 @@ const AdvertisementDetails = () => {
                 {/* Left Side: Images Gallery Showcase */}
                 <div className="lg:col-span-7 space-y-6">
                     {/* Active main view */}
-                    <div className="aspect-[16/10] rounded-[2rem] overflow-hidden bg-white border border-sand-300/35 relative shadow-sm">
+                    <div className="aspect-[16/10] rounded-[2rem] overflow-hidden bg-white dark:bg-slate-850 border border-sand-300/35 dark:border-slate-700/40 relative shadow-sm">
                         <img
                             src={images[activeImgIdx]}
                             alt={`${ad.vehicleName} ${ad.model}`}
@@ -166,9 +166,9 @@ const AdvertisementDetails = () => {
                                 <button
                                     key={idx}
                                     onClick={() => setActiveImgIdx(idx)}
-                                    className={`aspect-video rounded-2xl overflow-hidden border bg-white transition-all shadow-sm ${idx === activeImgIdx
-                                            ? 'border-warm-dark ring-2 ring-warm-dark/10 scale-95'
-                                            : 'border-sand-300 opacity-60 hover:opacity-100'
+                                    className={`aspect-video rounded-2xl overflow-hidden border bg-white dark:bg-slate-800 transition-all shadow-sm ${idx === activeImgIdx
+                                            ? 'border-warm-dark dark:border-warm-accent ring-2 ring-warm-dark/10 dark:ring-warm-accent/25 scale-95'
+                                            : 'border-sand-300 dark:border-slate-700 opacity-60 hover:opacity-100'
                                         }`}
                                 >
                                     <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
@@ -178,67 +178,67 @@ const AdvertisementDetails = () => {
                     )}
 
                     {/* Detailed Specifications Checklist Card */}
-                    <div className="bg-white border border-sand-300/60 rounded-[2rem] p-6 shadow-sm space-y-6">
+                    <div className="bg-white dark:bg-slate-800 border border-sand-300/60 dark:border-slate-700/60 rounded-[2rem] p-6 shadow-sm space-y-6">
                         <div>
-                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pb-3 border-b border-sand-200">
+                            <h3 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest pb-3 border-b border-sand-200 dark:border-slate-700">
                                 Vehicle Technical Specifications
                             </h3>
                         </div>
 
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <div className="p-3 bg-sand-100 border border-sand-200/50 rounded-2xl flex items-center gap-3">
-                                <FaRoad className="text-slate-400 text-sm" />
+                            <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                <FaRoad className="text-slate-400 dark:text-slate-550 text-sm" />
                                 <div>
-                                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">True Mileage</span>
-                                    <span className="text-xs font-black text-warm-dark">{ad.mileage?.toLocaleString() || 0} km</span>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">True Mileage</span>
+                                    <span className="text-xs font-black text-warm-dark dark:text-slate-100">{ad.mileage?.toLocaleString() || 0} km</span>
                                 </div>
                             </div>
 
-                            <div className="p-3 bg-sand-100 border border-sand-200/50 rounded-2xl flex items-center gap-3">
-                                <FaCog className="text-slate-400 text-sm" />
+                            <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                <FaCog className="text-slate-400 dark:text-slate-550 text-sm" />
                                 <div>
-                                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Transmission</span>
-                                    <span className="text-xs font-black text-warm-dark">{ad.transmission}</span>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">Transmission</span>
+                                    <span className="text-xs font-black text-warm-dark dark:text-slate-100">{ad.transmission}</span>
                                 </div>
                             </div>
 
-                            <div className="p-3 bg-sand-100 border border-sand-200/50 rounded-2xl flex items-center gap-3">
-                                <FaGasPump className="text-slate-400 text-sm" />
+                            <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                <FaGasPump className="text-slate-400 dark:text-slate-550 text-sm" />
                                 <div>
-                                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Fuel Type</span>
-                                    <span className="text-xs font-black text-warm-dark">{ad.fuelType}</span>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">Fuel Type</span>
+                                    <span className="text-xs font-black text-warm-dark dark:text-slate-100">{ad.fuelType}</span>
                                 </div>
                             </div>
 
-                            <div className="p-3 bg-sand-100 border border-sand-200/50 rounded-2xl flex items-center gap-3">
-                                <FaPalette className="text-slate-400 text-sm" />
+                            <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                <FaPalette className="text-slate-400 dark:text-slate-550 text-sm" />
                                 <div>
-                                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Exterior Color</span>
-                                    <span className="text-xs font-black text-warm-dark">{ad.color}</span>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">Exterior Color</span>
+                                    <span className="text-xs font-black text-warm-dark dark:text-slate-100">{ad.color}</span>
                                 </div>
                             </div>
 
-                            <div className="p-3 bg-sand-100 border border-sand-200/50 rounded-2xl flex items-center gap-3">
-                                <FaCalendarAlt className="text-slate-400 text-sm" />
+                            <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                <FaCalendarAlt className="text-slate-400 dark:text-slate-550 text-sm" />
                                 <div>
-                                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Manufacture Year</span>
-                                    <span className="text-xs font-black text-warm-dark">{ad.ManufactureYear}</span>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">Manufacture Year</span>
+                                    <span className="text-xs font-black text-warm-dark dark:text-slate-100">{ad.ManufactureYear}</span>
                                 </div>
                             </div>
 
-                            <div className="p-3 bg-sand-100 border border-sand-200/50 rounded-2xl flex items-center gap-3">
-                                <FaUser className="text-slate-400 text-sm" />
+                            <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                <FaUser className="text-slate-400 dark:text-slate-550 text-sm" />
                                 <div>
-                                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">Dealer ID</span>
-                                    <span className="text-xs font-black text-warm-dark truncate max-w-[80px]" title={ad.userId}>{ad.userId}</span>
+                                    <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">Dealer ID</span>
+                                    <span className="text-xs font-black text-warm-dark dark:text-slate-100 truncate max-w-[80px]" title={ad.userId}>{ad.userId}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Description Text */}
                         <div className="space-y-2 pt-2">
-                            <h4 className="text-xs font-black text-warm-dark uppercase tracking-wider">Seller Remarks & Notes</h4>
-                            <p className="text-slate-600 text-xs leading-relaxed font-normal whitespace-pre-line bg-sand-100/50 p-4 border border-sand-200/40 rounded-2xl">
+                            <h4 className="text-xs font-black text-warm-dark dark:text-slate-100 uppercase tracking-wider">Seller Remarks & Notes</h4>
+                            <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed font-normal whitespace-pre-line bg-sand-100/50 dark:bg-slate-900/50 p-4 border border-sand-200/40 dark:border-slate-800/40 rounded-2xl">
                                 {ad.description || "No seller notes available."}
                             </p>
                         </div>

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-warm-bg: #F4EFEB;
   --color-warm-card: #FFFFFF;
@@ -25,6 +27,12 @@ body {
   background-color: var(--color-warm-bg);
   color: var(--color-warm-dark);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark,
+html.dark body {
+  background-color: var(--color-warm-dark);
+  color: #f8fafc;
 }
 
 @keyframes scroll {

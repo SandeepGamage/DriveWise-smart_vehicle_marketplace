@@ -2,16 +2,21 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import CreateAdvertisement from './pages/advertisement/CreateAdvertisement.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
+import UserDashboard from './pages/dashboard/userDashboard.jsx';
 import AdvertisementDetails from './pages/advertisement/AdvertisementDetails.jsx';
 import ValuationCalculator from './pages/valuation/ValuationCalculator.jsx';
 import LandingPage from './pages/landing/LandingPage.jsx';
 import Layout from './components/Layout.jsx';
 import { Login } from './pages/login.jsx'
 import { Register } from './pages/register.jsx'
+import { AuthProvider } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 
 function App() {
     return (
-        <Router>
+        <ThemeProvider>
+            <AuthProvider>
+                <Router>
             <Layout>
                 <Routes>
                     {/* Home / Landing Page */}
@@ -19,6 +24,9 @@ function App() {
 
                     {/* Main Marketplace browsing feed */}
                     <Route path="/dashboard" element={<Dashboard />} />
+
+                    {/* Personal account dashboard */}
+                    <Route path="/user-dashboard" element={<UserDashboard />} />
 
                     {/* Form to list vehicles and run ML predictive logic */}
                     <Route path="/create-ad" element={<CreateAdvertisement />} />
@@ -47,6 +55,8 @@ function App() {
                 </Routes>
             </Layout>
         </Router>
+        </AuthProvider>
+        </ThemeProvider>
     );
 }
 

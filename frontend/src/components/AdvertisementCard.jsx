@@ -35,24 +35,24 @@ const AdvertisementCard = ({ ad, onDelete }) => {
     const percentDiff = aiPrice > 0 ? (delta / aiPrice) * 100 : 0;
 
     let valuationLabel = 'Fair Value';
-    let valuationColor = 'text-blue-700 bg-blue-50 border-blue-200';
+    let valuationColor = 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/30';
 
     if (aiPrice > 0) {
         if (percentDiff >= 8) {
             valuationLabel = 'Great Deal';
-            valuationColor = 'text-emerald-700 bg-emerald-50 border-emerald-250';
+            valuationColor = 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-250 dark:border-emerald-900/30';
         } else if (percentDiff <= -8) {
             valuationLabel = 'Premium';
-            valuationColor = 'text-amber-700 bg-amber-50 border-amber-250';
+            valuationColor = 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 border-amber-250 dark:border-amber-900/30';
         }
     }
 
     const adId = ad._id || ad.id || ad.addId;
 
     return (
-        <div className="group bg-white border border-sand-200 rounded-[2rem] overflow-hidden hover:shadow-[0_15px_30px_rgba(26,29,32,0.06)] transition-all duration-300 flex flex-col h-full relative">
+        <div className="group bg-white dark:bg-slate-800 border border-sand-200 dark:border-slate-700 rounded-[2rem] overflow-hidden hover:shadow-[0_15px_30px_rgba(26,29,32,0.06)] dark:hover:shadow-[0_15px_30px_rgba(0,0,0,0.3)] transition-all duration-300 flex flex-col h-full relative">
             {/* Visuals Box */}
-            <div className="relative aspect-[4/3] overflow-hidden bg-sand-100 group-hover:subpixel-antialiased">
+            <div className="relative aspect-[4/3] overflow-hidden bg-sand-100 dark:bg-slate-900 group-hover:subpixel-antialiased">
                 <Link to={`/advertisement/${adId}`}>
                     <img
                         src={images[currentImgIdx]}
@@ -63,7 +63,7 @@ const AdvertisementCard = ({ ad, onDelete }) => {
 
                 {/* Floating Bookmark & Status Indicators */}
                 <div className="absolute top-4 inset-x-4 flex items-center justify-between pointer-events-auto z-10">
-                    <span className="text-[9px] uppercase font-black tracking-wider px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-sand-300/30 text-warm-dark shadow-sm">
+                    <span className="text-[9px] uppercase font-black tracking-wider px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-sand-300/30 dark:border-slate-700/30 text-warm-dark dark:text-slate-200 shadow-sm">
                         {ad.ManufactureYear}
                     </span>
 
@@ -73,7 +73,7 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                             e.preventDefault();
                             setIsBookmarked(!isBookmarked);
                         }}
-                        className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-sand-300/30 flex items-center justify-center text-warm-dark hover:text-rose-500 hover:scale-105 hover:bg-white transition-all shadow-sm cursor-pointer"
+                        className="w-8 h-8 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-sand-300/30 dark:border-slate-700/30 flex items-center justify-center text-warm-dark dark:text-slate-200 hover:text-rose-500 hover:scale-105 hover:bg-white dark:hover:bg-slate-700 transition-all shadow-sm cursor-pointer"
                     >
                         {isBookmarked ? <FaBookmark className="text-rose-500 text-xs animate-ping-once" /> : <FaRegBookmark className="text-xs" />}
                     </button>
@@ -84,13 +84,13 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                     <div className="absolute inset-y-0 inset-x-2 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-250">
                         <button
                             onClick={prevImage}
-                            className="w-6 h-6 rounded-full bg-white/90 border border-sand-300/30 text-warm-dark flex items-center justify-center text-[10px] hover:bg-warm-dark hover:text-white transition-all shadow-sm"
+                            className="w-6 h-6 rounded-full bg-white/90 dark:bg-slate-850/90 border border-sand-300/30 dark:border-slate-700/35 text-warm-dark dark:text-slate-200 flex items-center justify-center text-[10px] hover:bg-warm-dark dark:hover:bg-warm-accent hover:text-white dark:hover:text-warm-dark transition-all shadow-sm"
                         >
                             🗙
                         </button>
                         <button
                             onClick={nextImage}
-                            className="w-6 h-6 rounded-full bg-white/90 border border-sand-300/30 text-warm-dark flex items-center justify-center text-[10px] hover:bg-warm-dark hover:text-white transition-all shadow-sm"
+                            className="w-6 h-6 rounded-full bg-white/90 dark:bg-slate-850/90 border border-sand-300/30 dark:border-slate-700/35 text-warm-dark dark:text-slate-200 flex items-center justify-center text-[10px] hover:bg-warm-dark dark:hover:bg-warm-accent hover:text-white dark:hover:text-warm-dark transition-all shadow-sm"
                         >
                             🗚
                         </button>
@@ -103,7 +103,7 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                         {images.map((_, idx) => (
                             <span
                                 key={idx}
-                                className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentImgIdx ? 'bg-warm-dark w-3' : 'bg-sand-400/50'
+                                className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentImgIdx ? 'bg-warm-dark dark:bg-warm-accent w-3' : 'bg-sand-400/50 dark:bg-slate-600'
                                     }`}
                             />
                         ))}
@@ -116,9 +116,9 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                 <div>
                     {/* Header: Title */}
                     <div className="flex items-start justify-between gap-1 mb-1">
-                        <h3 className="font-black text-warm-dark text-base tracking-tight truncate max-w-[85%]">
+                        <h3 className="font-black text-warm-dark dark:text-slate-100 text-base tracking-tight truncate max-w-[85%]">
                             <Link to={`/advertisement/${adId}`} className="hover:text-warm-accent transition-colors">
-                                {ad.vehicleName} <span className="font-semibold text-slate-450">{ad.model}</span>
+                                {ad.vehicleName} <span className="font-semibold text-slate-450 dark:text-slate-400">{ad.model}</span>
                             </Link>
                         </h3>
                     </div>
@@ -126,45 +126,45 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                     {/* Ratings & Deal Indicator */}
                     <div className="flex items-center space-x-2 mb-3 text-[10px] font-bold">
                         <span className="text-warm-accent">★ 4.96</span>
-                        <span className="text-slate-400 font-medium">(141 trips)</span>
+                        <span className="text-slate-400 dark:text-slate-500 font-medium">(141 trips)</span>
                         <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase border tracking-wider ${valuationColor}`}>
                             {valuationLabel}
                         </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed mb-4">
+                    <p className="text-[11px] text-slate-550 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
                         {ad.description || "No description provided."}
                     </p>
 
                     {/* Specs Row */}
                     <div className="flex flex-wrap gap-1.5 mb-4">
-                        <div className="flex items-center space-x-1 px-2.5 py-1 bg-sand-100 border border-sand-200/50 rounded-full text-[9px] font-black text-warm-dark/80">
-                            <FaRoad className="text-slate-450 text-[9px]" />
+                        <div className="flex items-center space-x-1 px-2.5 py-1 bg-sand-100 dark:bg-slate-700 border border-sand-200/50 dark:border-slate-600/50 rounded-full text-[9px] font-black text-warm-dark/80 dark:text-slate-200">
+                            <FaRoad className="text-slate-450 dark:text-slate-500 text-[9px]" />
                             <span>{ad.mileage?.toLocaleString() || 0} km</span>
                         </div>
-                        <div className="flex items-center space-x-1 px-2.5 py-1 bg-sand-100 border border-sand-200/50 rounded-full text-[9px] font-black text-warm-dark/80">
-                            <FaCog className="text-slate-450 text-[9px]" />
+                        <div className="flex items-center space-x-1 px-2.5 py-1 bg-sand-100 dark:bg-slate-700 border border-sand-200/50 dark:border-slate-600/50 rounded-full text-[9px] font-black text-warm-dark/80 dark:text-slate-200">
+                            <FaCog className="text-slate-450 dark:text-slate-500 text-[9px]" />
                             <span>{ad.transmission}</span>
                         </div>
-                        <div className="flex items-center space-x-1 px-2.5 py-1 bg-sand-100 border border-sand-200/50 rounded-full text-[9px] font-black text-warm-dark/80">
+                        <div className="flex items-center space-x-1 px-2.5 py-1 bg-sand-100 dark:bg-slate-700 border border-sand-200/50 dark:border-slate-600/50 rounded-full text-[9px] font-black text-warm-dark/80 dark:text-slate-200">
                             <span>⛽ {ad.fuelType}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Footer Pricing & CTA */}
-                <div className="border-t border-sand-200/60 pt-4 mt-auto">
+                <div className="border-t border-sand-200/60 dark:border-slate-700/65 pt-4 mt-auto">
                     <div className="flex items-baseline justify-between mb-4">
                         <div>
-                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Price</span>
-                            <span className="text-base font-black text-warm-dark tracking-tight">
-                                {askingPrice.toLocaleString()} <span className="text-[10px] font-bold text-slate-500">LKR</span>
+                            <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Price</span>
+                            <span className="text-base font-black text-warm-dark dark:text-slate-100 tracking-tight">
+                                {askingPrice.toLocaleString()} <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500">LKR</span>
                             </span>
                         </div>
                         {aiPrice > 0 && (
                             <div className="text-right">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">AI Estimate</span>
-                                <span className="text-xs font-bold text-slate-450">
+                                <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">AI Estimate</span>
+                                <span className="text-xs font-bold text-slate-450 dark:text-slate-400">
                                     {aiPrice.toLocaleString()} <span className="text-[9px]">LKR</span>
                                 </span>
                             </div>
@@ -175,7 +175,7 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                     <div className="flex gap-2">
                         <Link
                             to={`/advertisement/${adId}`}
-                            className="flex-1 bg-warm-dark hover:bg-warm-dark-card text-white font-black py-2.5 rounded-full transition-all flex items-center justify-center space-x-1.5 text-xs shadow-sm text-center uppercase tracking-wider text-[10px]"
+                            className="flex-1 bg-warm-dark dark:bg-warm-accent hover:bg-warm-dark-card dark:hover:bg-warm-accent-hover text-white dark:text-warm-dark font-black py-2.5 rounded-full transition-all flex items-center justify-center space-x-1.5 text-xs shadow-sm text-center uppercase tracking-wider text-[10px]"
                         >
                             <span>View Details</span>
                         </Link>
@@ -184,11 +184,9 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     e.preventDefault();
-                                    if (confirm('Are you sure you want to delete this listing?')) {
-                                        onDelete(adId);
-                                    }
+                                    onDelete(adId);
                                 }}
-                                className="w-9 h-9 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm"
+                                className="w-9 h-9 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm"
                                 title="Delete Listing"
                             >
                                 <FaTrashAlt className="text-xs" />

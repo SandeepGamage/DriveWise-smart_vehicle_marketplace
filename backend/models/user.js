@@ -37,9 +37,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    isSuspend: {
+    isActive: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   { timestamps: true }
