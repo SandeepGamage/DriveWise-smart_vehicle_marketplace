@@ -28,6 +28,7 @@ const CreateAdvertisement = () => {
 
     const [loading, setLoading] = useState(false);
     const [predicting, setPredicting] = useState(false);
+    const [responseMessage, setResponseMessage] = useState({ type: '', text: '' });
     const [autoPredictedPrice, setAutoPredictedPrice] = useState(null);
 
     const handleChange = (e) => {
