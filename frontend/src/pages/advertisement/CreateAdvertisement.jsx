@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import brandModelMap from '../../utils/brand_model_map.json';
 import mediaUpload from '../../utils/mediaUpload.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 import { goeyToast } from 'goey-toast';
 
 const CreateAdvertisement = () => {
+    const { user } = useAuth();
+    const storedUserId = user?._id || user?.UID || '';
+
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -17,7 +23,7 @@ const CreateAdvertisement = () => {
         transmission: 'Manual',
         color: '',
         images: ['https://placehold.co/600x400?text=Vehicle+Image'],
-        userId: 'User_Savin_2026'
+        userId: storedUserId
     });
 
     const [loading, setLoading] = useState(false);
@@ -32,6 +38,13 @@ const CreateAdvertisement = () => {
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState('');
     const [manualUrl, setManualUrl] = useState('');
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            userId: storedUserId
+        }));
+    }, [storedUserId]);
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -80,7 +93,7 @@ const CreateAdvertisement = () => {
                         transmission: formData.transmission
                     };
 
-                    const res = await axios.post('http://localhost:3000/api/advertisement/predict-price', evaluationPayload);
+                    const res = await axios.post(`${API_BASE_URL}/api/advertisement/predict-price`, evaluationPayload);
 
                     if (res.data.success) {
                         setAutoPredictedPrice(res.data.predictedPrice);
@@ -117,11 +130,18 @@ const CreateAdvertisement = () => {
             price: Number(formData.price),
             ManufactureYear: Number(formData.ManufactureYear),
             mileage: Number(formData.mileage),
-            predictedPrice: autoPredictedPrice
+            predictedPrice: autoPredictedPrice,
+            userId: storedUserId || formData.userId
         };
 
+        if (!storedUserId && !formData.userId) {
+            setResponseMessage({ type: 'error', text: 'Please sign in before creating a listing.' });
+            setLoading(false);
+            return;
+        }
+
         try {
-            const res = await axios.post('http://localhost:3000/api/advertisement/advertisements', finalizedPayload);
+            const res = await axios.post(`${API_BASE_URL}/api/advertisement/advertisements`, finalizedPayload);
             if (res.data.success) {
                 goeyToast.success('Advertisement Listed', {
                     description: 'Ad post created live across your vehicle marketplace!'
@@ -129,7 +149,7 @@ const CreateAdvertisement = () => {
                 setFormData({
                     title: '', description: '', vehicleName: '', model: '', price: '',
                     ManufactureYear: '', mileage: '', fuelType: 'Petrol', transmission: 'Manual',
-                    color: '', images: ['https://placehold.co/600x400?text=Vehicle+Image'], userId: 'User_Savin_2026'
+                    color: '', images: ['https://placehold.co/600x400?text=Vehicle+Image'], userId: storedUserId
                 });
                 setAutoPredictedPrice(null);
             }
@@ -144,42 +164,52 @@ const CreateAdvertisement = () => {
     };
 
     return (
-        <div className="min-h-screen py-10 transition-colors duration-300">
-            <div className="max-w-3xl mx-auto bg-white border border-sand-300/50 rounded-[2.5rem] shadow-sm p-8">
+        <div className="min-h-screen py-10 transition-colors duration-300 text-warm-dark dark:text-slate-100">
+            <div className="max-w-3xl mx-auto bg-white dark:bg-slate-900 border border-sand-300/50 dark:border-slate-800 rounded-[2.5rem] shadow-sm p-8 transition-colors duration-300">
                 <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-black text-warm-dark tracking-tight">List New Vehicle For Sale</h1>
-                    <p className="text-slate-550 text-sm mt-1">Our AI engine will calibrate valuation metrics dynamically while you fill out the details.</p>
+                    <h1 className="text-3xl font-black text-warm-dark dark:text-slate-100 tracking-tight">List New Vehicle For Sale</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Our AI engine will calibrate valuation metrics dynamically while you fill out the details.</p>
                 </div>
+
+                {responseMessage.text && (
+                    <div className={`p-4 rounded-2xl mb-6 text-xs font-black border uppercase tracking-wider ${
+                        responseMessage.type === 'success' 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900/40' 
+                            : 'bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900/40'
+                    }`}>
+                        {responseMessage.text}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Ad Title *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Ad Title *</label>
                             <input 
                                 required 
                                 type="text" 
                                 name="title" 
                                 value={formData.title} 
                                 onChange={handleChange} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent" 
+                                className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent focus:bg-white focus:dark:bg-slate-950" 
                                 placeholder="e.g., Unregistered Petrol Audi A4" 
                             />
                         </div>
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Detailed Description *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Detailed Description *</label>
                             <textarea 
                                 required 
                                 rows="3" 
                                 name="description" 
                                 value={formData.description} 
                                 onChange={handleChange} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-2xl px-4.5 py-3 text-xs text-warm-dark focus:outline-none focus:border-warm-accent" 
+                                className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-2xl px-4.5 py-3 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent focus:bg-white focus:dark:bg-slate-950" 
                                 placeholder="Vehicle condition features..."
                             ></textarea>
                         </div>
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-2">Vehicle Gallery / Images</label>
-                            <div className="relative border-2 border-dashed border-sand-300 hover:border-warm-accent/80 rounded-2xl p-6 transition-all duration-200 bg-sand-100/50 flex flex-col items-center justify-center text-center group cursor-pointer">
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Vehicle Gallery / Images</label>
+                            <div className="relative border-2 border-dashed border-sand-300 dark:border-slate-800 hover:border-warm-accent/80 rounded-2xl p-6 transition-all duration-200 bg-sand-100/50 dark:bg-slate-950/40 flex flex-col items-center justify-center text-center group cursor-pointer">
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -191,10 +221,10 @@ const CreateAdvertisement = () => {
                                     <div className="text-3xl transition-transform group-hover:scale-110 duration-200">
                                         {uploading ? "⏳" : "📸"}
                                     </div>
-                                    <div className="text-sm font-bold text-warm-dark">
+                                    <div className="text-sm font-bold text-warm-dark dark:text-slate-200">
                                         {uploading ? "Uploading media asset..." : "Drag & Drop or Click to Upload Image"}
                                     </div>
-                                    <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Supports PNG, JPG, WEBP (Max 5MB)</div>
+                                    <div className="text-[10px] text-slate-400 dark:text-slate-550 font-bold uppercase tracking-wider">Supports PNG, JPG, WEBP (Max 5MB)</div>
                                 </div>
                             </div>
 
@@ -206,7 +236,7 @@ const CreateAdvertisement = () => {
                                 {formData.images.map((imgUrl, idx) => {
                                     const isPlaceholder = imgUrl.includes('placehold.co');
                                     return (
-                                        <div key={idx} className="relative aspect-video rounded-2xl overflow-hidden bg-sand-100 border border-sand-200 shadow-sm group">
+                                        <div key={idx} className="relative aspect-video rounded-2xl overflow-hidden bg-sand-100 dark:bg-slate-950 border border-sand-200 dark:border-slate-800 shadow-sm group">
                                             <img src={imgUrl} alt={`Vehicle preview ${idx + 1}`} className="w-full h-full object-cover" />
                                             {!isPlaceholder && (
                                                 <button
@@ -224,11 +254,11 @@ const CreateAdvertisement = () => {
                         </div>
                     </div>
 
-                    <div className="border-t border-sand-200 pt-6">
-                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Core Specification Matrix</h3>
+                    <div className="border-t border-sand-200 dark:border-slate-800 pt-6">
+                        <h3 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Core Specification Matrix</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Brand / Make *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Brand / Make *</label>
                                 <select
                                     required
                                     name="vehicleName"
@@ -242,32 +272,32 @@ const CreateAdvertisement = () => {
                                             model: models.length > 0 ? models[0] : ''
                                         }));
                                     }}
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent cursor-pointer"
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent cursor-pointer"
                                 >
-                                    <option value="">Select Brand</option>
+                                    <option value="" className="dark:bg-slate-900 dark:text-slate-300">Select Brand</option>
                                     {Object.keys(brandModelMap).map((brand) => (
-                                        <option key={brand} value={brand}>{brand}</option>
+                                        <option key={brand} value={brand} className="dark:bg-slate-900 dark:text-slate-300">{brand}</option>
                                     ))}
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Model Family *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Model Family *</label>
                                 <select
                                     required
                                     name="model"
                                     value={formData.model}
                                     onChange={handleChange}
                                     disabled={!formData.vehicleName}
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent disabled:opacity-50 cursor-pointer"
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent disabled:opacity-50 cursor-pointer"
                                 >
-                                    <option value="">Select Model</option>
+                                    <option value="" className="dark:bg-slate-900 dark:text-slate-300">Select Model</option>
                                     {(brandModelMap[formData.vehicleName] || []).map((model) => (
-                                        <option key={model} value={model}>{model}</option>
+                                        <option key={model} value={model} className="dark:bg-slate-900 dark:text-slate-300">{model}</option>
                                     ))}
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Year of Manufacture *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Year of Manufacture *</label>
                                 <input 
                                     required 
                                     type="number" 
@@ -275,12 +305,12 @@ const CreateAdvertisement = () => {
                                     name="ManufactureYear" 
                                     value={formData.ManufactureYear} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent" 
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent" 
                                     placeholder="e.g., 2021" 
                                 />
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">True Mileage (km) *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">True Mileage (km) *</label>
                                 <input 
                                     required 
                                     type="number" 
@@ -288,29 +318,29 @@ const CreateAdvertisement = () => {
                                     name="mileage" 
                                     value={formData.mileage} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent" 
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent" 
                                     placeholder="e.g., 32000" 
                                 />
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Transmission *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Transmission *</label>
                                 <select 
                                     name="transmission" 
                                     value={formData.transmission} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent cursor-pointer"
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent cursor-pointer"
                                 >
-                                    <option value="Manual">Manual</option>
-                                    <option value="Automatic">Automatic</option>
+                                    <option value="Manual" className="dark:bg-slate-900 dark:text-slate-300">Manual</option>
+                                    <option value="Automatic" className="dark:bg-slate-900 dark:text-slate-300">Automatic</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Fuel Category *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Fuel Category *</label>
                                 <select 
                                     name="fuelType" 
                                     value={formData.fuelType} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent cursor-pointer"
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent cursor-pointer"
                                 >
                                     <option value="Petrol">Petrol</option>
                                     <option value="Diesel">Diesel</option>
@@ -318,18 +348,18 @@ const CreateAdvertisement = () => {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Exterior Paint Color *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Exterior Paint Color *</label>
                                 <input 
                                     required 
                                     type="text" 
                                     name="color" 
                                     value={formData.color} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent" 
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent" 
                                 />
                             </div>
                             <div>
-                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Your Asking Price (LKR) *</label>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Your Asking Price (LKR) *</label>
                                 <input 
                                     required 
                                     type="number" 
@@ -337,7 +367,7 @@ const CreateAdvertisement = () => {
                                     name="price" 
                                     value={formData.price} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4.5 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent font-bold text-emerald-700" 
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-450 focus:outline-none focus:border-warm-accent" 
                                     placeholder="Enter target sales price" 
                                 />
                             </div>
@@ -345,7 +375,7 @@ const CreateAdvertisement = () => {
                     </div>
 
                     {/* High-Visibility Live Valuation Insight Card (Contrast Dark Container) */}
-                    <div className="mt-8 bg-warm-dark text-white rounded-[2rem] p-6 shadow-xl border border-white/5">
+                    <div className="mt-8 rounded-4xl border border-white/5 bg-warm-dark p-6 text-white shadow-xl">
                         <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
                             <div className="flex items-center space-x-3">
                                 <span className="text-xl">🔮</span>
@@ -395,7 +425,7 @@ const CreateAdvertisement = () => {
                     <button 
                         type="submit" 
                         disabled={loading} 
-                        className="w-full bg-warm-dark hover:bg-warm-dark-card text-white font-black py-4 px-6 rounded-full shadow-sm transition-all text-xs uppercase tracking-widest cursor-pointer disabled:opacity-50 mt-4"
+                        className="w-full bg-warm-dark dark:bg-warm-accent hover:bg-warm-dark-card dark:hover:bg-warm-accent-hover text-white dark:text-warm-dark font-black py-4 px-6 rounded-full shadow-sm transition-all text-xs uppercase tracking-widest cursor-pointer disabled:opacity-50 mt-4"
                     >
                         {loading ? 'Publishing Advertisement...' : 'Publish Advertisement Listing'}
                     </button>

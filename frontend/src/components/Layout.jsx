@@ -4,7 +4,7 @@ import { FaHeart, FaGithub, FaCar, FaShieldAlt } from 'react-icons/fa';
 
 const Layout = ({ children }) => {
     return (
-        <div className="min-h-screen bg-warm-bg text-warm-dark flex flex-col font-sans transition-colors duration-300">
+        <div className="min-h-screen bg-warm-bg dark:bg-warm-dark text-warm-dark dark:text-slate-100 flex flex-col font-sans transition-colors duration-300">
             {/* Navigation Bar */}
             <Navbar />
 

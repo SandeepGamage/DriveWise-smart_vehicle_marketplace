@@ -2,16 +2,23 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import CreateAdvertisement from './pages/advertisement/CreateAdvertisement.jsx';
 import Dashboard from './pages/dashboard/MarketPlace.jsx';
+import UserDashboard from './pages/dashboard/userDashboard.jsx';
 import AdvertisementDetails from './pages/advertisement/AdvertisementDetails.jsx';
 import ValuationCalculator from './pages/valuation/ValuationCalculator.jsx';
 import LandingPage from './pages/landing/LandingPage.jsx';
 import Layout from './components/Layout.jsx';
+import { Login } from './pages/login.jsx'
+import { Register } from './pages/register.jsx'
+import { AuthProvider } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import { GoeyToaster } from 'goey-toast';
 import 'goey-toast/styles.css';
 
 function App() {
     return (
-        <Router>
+        <ThemeProvider>
+            <AuthProvider>
+                <Router>
             <GoeyToaster position="top-right" />
             <Layout>
                 <Routes>
@@ -21,6 +28,9 @@ function App() {
                     {/* Main Marketplace browsing feed */}
                     <Route path="/dashboard" element={<Dashboard />} />
 
+                    {/* Personal account dashboard */}
+                    <Route path="/user-dashboard" element={<UserDashboard />} />
+
                     {/* Form to list vehicles and run ML predictive logic */}
                     <Route path="/create-ad" element={<CreateAdvertisement />} />
 
@@ -29,6 +39,11 @@ function App() {
 
                     {/* Standalone AI Valuation Tool route */}
                     <Route path="/valuation" element={<ValuationCalculator />} />
+
+                    <Route path="/login" element={<Login />} />
+
+                    <Route path="/register" element={<Register />} />
+    
 
                     {/* Fallback 404 Route for unmatched paths */}
                     <Route path="*" element={
@@ -43,6 +58,8 @@ function App() {
                 </Routes>
             </Layout>
         </Router>
+        </AuthProvider>
+        </ThemeProvider>
     );
 }
 

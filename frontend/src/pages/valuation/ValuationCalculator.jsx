@@ -100,15 +100,15 @@ const ValuationCalculator = () => {
     return (
         <div className="space-y-8 pb-16 transition-colors duration-300">
             {/* Header Title Section */}
-            <div className="pb-6 border-b border-sand-300/50">
-                <h1 className="text-4xl font-black text-warm-dark tracking-tight flex items-center gap-2.5 font-sans">
-                    <span className="w-10 h-10 rounded-2xl bg-white border border-sand-300/60 text-warm-accent flex items-center justify-center shadow-sm">
+            <div className="pb-6 border-b border-sand-300/50 dark:border-slate-800/80">
+                <h1 className="text-4xl font-black text-warm-dark dark:text-slate-100 tracking-tight flex items-center gap-2.5 font-sans">
+                    <span className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 border border-sand-300/60 dark:border-slate-700/60 text-warm-accent flex items-center justify-center shadow-sm">
                         <FaBrain className="text-lg" />
                     </span>
                     <span>AI Valuation Engine</span>
-                    <span className="text-[10px] px-2.5 py-1 bg-warm-dark text-white rounded-full font-black uppercase tracking-wider">Predictive</span>
+                    <span className="text-[10px] px-2.5 py-1 bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark rounded-full font-black uppercase tracking-wider">Predictive</span>
                 </h1>
-                <p className="text-slate-500 text-sm mt-2">
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">
                     Enter vehicle characteristics to query raw scikit-learn pipeline weights live and calibrate pricing models dynamically.
                 </p>
             </div>
@@ -116,15 +116,15 @@ const ValuationCalculator = () => {
             {/* Split Grid layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 {/* Left Side: Input parameters Form */}
-                <div className="lg:col-span-6 bg-white border border-sand-300/50 p-6 rounded-[2rem] shadow-sm space-y-6">
-                    <div className="flex items-center gap-2 pb-3 border-b border-sand-200">
+                <div className="lg:col-span-6 bg-white dark:bg-slate-800 border border-sand-300/50 dark:border-slate-700/50 p-6 rounded-[2rem] shadow-sm space-y-6">
+                    <div className="flex items-center gap-2 pb-3 border-b border-sand-200 dark:border-slate-700">
                         <FaSlidersH className="text-warm-accent text-xs" />
-                        <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest">Calibration Input Panel</h2>
+                        <h2 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Calibration Input Panel</h2>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Brand / Make *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-550 mb-1.5">Brand / Make *</label>
                             <select 
                                 required 
                                 name="vehicleName" 
@@ -138,34 +138,34 @@ const ValuationCalculator = () => {
                                         model: models.length > 0 ? models[0] : '' 
                                     }));
                                 }} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors cursor-pointer"
+                                className="w-full bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800 text-warm-dark dark:text-slate-200 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-warm-accent transition-colors cursor-pointer"
                             >
-                                <option value="">Select Brand</option>
+                                <option value="" className="dark:bg-slate-800 dark:text-slate-300">Select Brand</option>
                                 {Object.keys(brandModelMap).map((brand) => (
-                                    <option key={brand} value={brand}>{brand}</option>
+                                    <option key={brand} value={brand} className="dark:bg-slate-800 dark:text-slate-350">{brand}</option>
                                 ))}
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Model Family *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-550 mb-1.5">Model Family *</label>
                             <select 
                                 required 
                                 name="model" 
                                 value={calcData.model} 
                                 onChange={handleChange} 
                                 disabled={!calcData.vehicleName}
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors disabled:opacity-40 cursor-pointer"
+                                className="w-full bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800 text-warm-dark dark:text-slate-200 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-warm-accent transition-colors disabled:opacity-40 cursor-pointer"
                             >
-                                <option value="">Select Model</option>
+                                <option value="" className="dark:bg-slate-800 dark:text-slate-300">Select Model</option>
                                 {(brandModelMap[calcData.vehicleName] || []).map((model) => (
-                                    <option key={model} value={model}>{model}</option>
+                                    <option key={model} value={model} className="dark:bg-slate-800 dark:text-slate-350">{model}</option>
                                 ))}
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Manufacture Year *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-550 mb-1.5">Manufacture Year *</label>
                             <input 
                                 required 
                                 type="number" 
@@ -173,13 +173,13 @@ const ValuationCalculator = () => {
                                 name="ManufactureYear" 
                                 value={calcData.ManufactureYear} 
                                 onChange={handleChange} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors"
+                                className="w-full bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800 text-warm-dark dark:text-slate-200 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-warm-accent transition-colors"
                                 placeholder="e.g. 2020" 
                             />
                         </div>
 
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">True Mileage (km) *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-550 mb-1.5">True Mileage (km) *</label>
                             <input 
                                 required 
                                 type="number" 
@@ -187,26 +187,26 @@ const ValuationCalculator = () => {
                                 name="mileage" 
                                 value={calcData.mileage} 
                                 onChange={handleChange} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors"
+                                className="w-full bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800 text-warm-dark dark:text-slate-200 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-warm-accent transition-colors"
                                 placeholder="e.g. 45000" 
                             />
                         </div>
 
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Transmission Type *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-550 mb-1.5">Transmission Type *</label>
                             <select 
                                 name="transmission" 
                                 value={calcData.transmission} 
                                 onChange={handleChange} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors cursor-pointer"
+                                className="w-full bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800 text-warm-dark dark:text-slate-200 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-warm-accent transition-colors cursor-pointer"
                             >
-                                <option value="Manual">Manual</option>
-                                <option value="Automatic">Automatic</option>
+                                <option value="Manual" className="dark:bg-slate-800 dark:text-slate-350">Manual</option>
+                                <option value="Automatic" className="dark:bg-slate-800 dark:text-slate-350">Automatic</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Horsepower (HP) *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-550 mb-1.5">Horsepower (HP) *</label>
                             <input 
                                 required 
                                 type="number" 
@@ -214,13 +214,13 @@ const ValuationCalculator = () => {
                                 name="powerHp" 
                                 value={calcData.powerHp} 
                                 onChange={handleChange} 
-                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors"
+                                className="w-full bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800 text-warm-dark dark:text-slate-200 rounded-full px-4 py-2.5 text-xs focus:outline-none focus:border-warm-accent transition-colors"
                                 placeholder="e.g. 150" 
                             />
                         </div>
                     </div>
 
-                    <div className="p-4 bg-sand-100 border border-sand-200/50 rounded-2xl text-[11px] text-slate-500 leading-relaxed flex items-start gap-2.5">
+                    <div className="p-4 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed flex items-start gap-2.5">
                         <FaInfoCircle className="text-warm-accent text-sm mt-0.5 shrink-0" />
                         <p>
                             Predictions are calibrated instantly in the background. Changing parameters triggers asynchronous requests to the server, returning the calculated results using Euro-LKR rates.

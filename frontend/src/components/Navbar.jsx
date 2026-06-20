@@ -1,32 +1,43 @@
 import React, { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
-import { FaCar, FaBars, FaTimes } from 'react-icons/fa';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { FaCar, FaSignOutAlt, FaSignInAlt, FaSun, FaMoon, FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const Navbar = () => {
+    const { user, logout } = useAuth();
+    const { isDark, toggleTheme } = useTheme();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <header className="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto transition-all duration-300">
-            <div className="bg-white/40 backdrop-blur-md border border-white/30 rounded-2xl sm:rounded-full shadow-[0_8px_32px_0_rgba(26,29,32,0.06)] px-6 py-2 transition-all duration-300">
-                <div className="flex items-center justify-between h-12">
+        <header className="sticky top-0 z-50 bg-warm-bg/90 dark:bg-warm-dark/90 backdrop-blur-md border-b border-sand-300/50 dark:border-slate-800/80 shadow-sm transition-all duration-300">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
                     {/* Left: Brand Identity Logo */}
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center space-x-2 group">
-                            <FaCar className="text-warm-dark text-lg group-hover:scale-110 transition-transform duration-200" />
-                            <span className="text-xl font-extrabold text-warm-dark tracking-tight">
+                            <FaCar className="text-warm-dark dark:text-slate-300 text-lg group-hover:scale-110 transition-transform duration-200" />
+                            <span className="text-xl font-extrabold text-warm-dark dark:text-slate-100 tracking-tight">
                                 DriveWise
                             </span>
                         </Link>
                     </div>
 
-                    {/* Center: Centered Pill Segmented Controller (hidden on mobile, visible on desktop) */}
-                    <nav className="hidden md:flex items-center bg-sand-200/80 border border-sand-300/50 p-1 rounded-full shadow-inner">
+                    {/* Center: Centered Pill Segmented Controller */}
+                    <nav className="flex items-center bg-sand-200/80 dark:bg-slate-800/80 border border-sand-300/50 dark:border-slate-700/50 p-1 rounded-full shadow-inner">
                         <NavLink
                             to="/dashboard"
                             className={({ isActive }) =>
                                 `px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5 ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/70 hover:text-warm-dark hover:bg-sand-300/40'
+                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                    : 'text-warm-dark/70 dark:text-slate-300 hover:text-warm-dark dark:hover:text-white hover:bg-sand-300/40 dark:hover:bg-slate-700/40'
                                 }`
                             }
                         >
@@ -37,8 +48,8 @@ const Navbar = () => {
                             to="/create-ad"
                             className={({ isActive }) =>
                                 `px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5 ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/70 hover:text-warm-dark hover:bg-sand-300/40'
+                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                    : 'text-warm-dark/70 dark:text-slate-300 hover:text-warm-dark dark:hover:text-white hover:bg-sand-300/40 dark:hover:bg-slate-700/40'
                                 }`
                             }
                         >
@@ -49,8 +60,8 @@ const Navbar = () => {
                             to="/valuation"
                             className={({ isActive }) =>
                                 `px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5 ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/70 hover:text-warm-dark hover:bg-sand-300/40'
+                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                    : 'text-warm-dark/70 dark:text-slate-300 hover:text-warm-dark dark:hover:text-white hover:bg-sand-300/40 dark:hover:bg-slate-700/40'
                                 }`
                             }
                         >
@@ -58,33 +69,52 @@ const Navbar = () => {
                         </NavLink>
                     </nav>
 
-                    {/* Right: User State, Notifications, and Hamburger Button */}
+                    {/* Right: Dynamic User State Profile & Notifications */}
                     <div className="flex items-center space-x-3">
-                        {/* Notification Circle Bell */}
+                        {/* Theme Toggle Button */}
                         <button
-                            className="relative w-9 h-9 rounded-full bg-white border border-sand-300/60 flex items-center justify-center text-warm-dark hover:bg-sand-100 transition-colors shadow-sm cursor-pointer"
-                            title="Notifications"
+                            onClick={toggleTheme}
+                            className="w-9 h-9 rounded-full bg-white dark:bg-warm-dark-card border border-sand-300/60 dark:border-slate-700/60 flex items-center justify-center text-warm-dark dark:text-slate-300 hover:bg-sand-100 dark:hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+                            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
                         >
-                            <span className="text-xs">🔔</span>
-                            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-rose-500 border border-white"></span>
+                            {isDark ? <FaSun className="text-amber-450 text-xs" /> : <FaMoon className="text-slate-500 text-xs" />}
                         </button>
 
-                        {/* User Profile avatar */}
-                        <div
-                            className="w-9 h-9 rounded-full border border-sand-300 hover:border-warm-accent transition-all cursor-pointer overflow-hidden bg-warm-dark text-white flex items-center justify-center text-[10px] font-black shadow-sm"
-                            title="Profile Settings"
-                        >
-                            SG
-                        </div>
+                        {user ? (
+                            <>
+                                {/* User Profile avatar */}
 
-                        {/* Mobile Toggle Button */}
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="md:hidden w-9 h-9 rounded-full bg-white border border-sand-300/60 flex items-center justify-center text-warm-dark hover:bg-sand-100 transition-colors shadow-sm cursor-pointer"
-                            title="Toggle Menu"
-                        >
-                            {isOpen ? <FaTimes className="text-sm" /> : <FaBars className="text-sm" />}
-                        </button>
+                                <Link
+                                    to="/user-dashboard"
+                                    className="w-9 h-9 rounded-full border border-sand-300 dark:border-slate-700 hover:border-warm-accent dark:hover:border-warm-accent transition-all cursor-pointer overflow-hidden bg-warm-dark text-white flex items-center justify-center text-[10px] font-black shadow-sm"
+                                    title="Open user dashboard"
+                                >
+                                    {user.profilePic ? (
+                                        <img src={user.profilePic} alt={user.userName || 'Profile'} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span>{user.userName?.slice(0, 2)?.toUpperCase() || 'U'}</span>
+                                    )}
+                                </Link>
+
+                                {/* Logout Button */}
+                                <button
+                                    onClick={handleLogout}
+                                    className="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-transparent text-warm-dark dark:text-slate-300 border border-sand-300/60 dark:border-slate-700/60 hover:bg-sand-100 dark:hover:bg-slate-800 hover:text-rose-600 dark:hover:text-rose-455 transition-all duration-300 cursor-pointer shadow-sm flex items-center space-x-1"
+                                    title="Logout"
+                                >
+                                    <FaSignOutAlt className="text-[10px]" />
+                                    <span className="hidden sm:inline">Logout</span>
+                                </button>
+                            </>
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark hover:bg-warm-accent hover:text-warm-dark dark:hover:bg-warm-accent-hover transition-all duration-300 shadow-md flex items-center space-x-1.5"
+                            >
+                                <FaSignInAlt className="text-[10px]" />
+                                <span>Login</span>
+                            </Link>
+                        )}
                     </div>
                 </div>
 
