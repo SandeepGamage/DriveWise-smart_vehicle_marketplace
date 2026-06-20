@@ -18,7 +18,7 @@ export default async function uploadImage(file) {
         if (error) throw error;
 
         const { data: publicUrlData } = supabase.storage
-            .from("profile_pics")
+            .from("images")
             .getPublicUrl(fileName);
 
         return publicUrlData.publicUrl;
