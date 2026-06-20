@@ -402,7 +402,6 @@ const Dashboard = () => {
                         <AdvertisementCard
                             key={ad._id || ad.id || ad.addId}
                             ad={ad}
-                            onDelete={handleDeleteAd}
                         />
                     ))}
                 </div>

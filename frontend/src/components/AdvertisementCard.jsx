@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import {
     FaRoad,
     FaCog,
-    FaTrashAlt,
     FaRegBookmark,
     FaBookmark
 } from 'react-icons/fa';
 
-const AdvertisementCard = ({ ad, onDelete }) => {
+const AdvertisementCard = ({ ad, onDelete}) => {
     const [currentImgIdx, setCurrentImgIdx] = useState(0);
     const [isBookmarked, setIsBookmarked] = useState(false);
 

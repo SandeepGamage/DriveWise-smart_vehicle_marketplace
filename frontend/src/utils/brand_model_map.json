@@ -601,6 +601,24 @@
         "Model X",
         "Model Y"
     ],
+    "Toyota": [
+        "Allion",
+        "Aqua",
+        "Axio",
+        "CH-R",
+        "Camry",
+        "Corolla",
+        "Fortuner",
+        "Harrier",
+        "Hilux",
+        "Land Cruiser",
+        "Prado",
+        "Premio",
+        "Prius",
+        "RAV4",
+        "Vitz",
+        "Yaris"
+    ],
     "Volkswagen": [
         "Arteon",
         "Bora",

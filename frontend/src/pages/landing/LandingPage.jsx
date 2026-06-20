@@ -170,9 +170,10 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            {/* Interactive Call-To-Action Banner (Contrast Dark Container) */}
-            <div className="bg-warm-dark text-white rounded-[3rem] p-12 text-center space-y-6 shadow-xl border border-white/5 relative overflow-hidden">
-                <div className="absolute -top-12 -left-12 w-64 h-64 rounded-full bg-warm-accent/5 blur-2xl"></div>
+            {/* Interactive Call-To-Action Banner (Vibrant Neon Gradient Container) */}
+            <div className="bg-gradient-to-r from-warm-dark via-warm-dark-card to-indigo-950 text-white rounded-[3rem] p-12 sm:p-16 text-center space-y-6 shadow-2xl border border-white/10 relative overflow-hidden">
+                <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-warm-accent/20 blur-3xl"></div>
+                <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-indigo-500/20 blur-3xl"></div>
 
                 <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight max-w-xl mx-auto">
                     Ready to Calibrate Pricing for Your Vehicle?

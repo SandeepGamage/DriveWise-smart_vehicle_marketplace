@@ -68,6 +68,13 @@ export const createAdvertisement = async (req, res) => {
             });
         }
 
+        if (Number(price) < 0 || Number(mileage) < 0 || (ManufactureYear && Number(ManufactureYear) < 0)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Price, mileage, and manufacture year cannot be negative'
+            });
+        }
+
         let finalPredictedPrice = predictedPrice;
 
         
@@ -258,6 +265,15 @@ export const updateAdvertisement = async (req, res) => {
 
       
         delete updateData.isActive;
+
+        if ((updateData.price !== undefined && Number(updateData.price) < 0) || 
+            (updateData.mileage !== undefined && Number(updateData.mileage) < 0) || 
+            (updateData.ManufactureYear !== undefined && Number(updateData.ManufactureYear) < 0)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Price, mileage, and manufacture year cannot be negative'
+            });
+        }
 
         const vehicleSpecsChanged = updateData.vehicleName || updateData.model || 
                                     updateData.mileage || updateData.ManufactureYear || 

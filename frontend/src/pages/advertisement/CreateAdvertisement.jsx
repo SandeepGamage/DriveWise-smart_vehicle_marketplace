@@ -5,6 +5,7 @@ import mediaUpload from '../../utils/mediaUpload.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+import { goeyToast } from 'goey-toast';
 
 const CreateAdvertisement = () => {
     const { user } = useAuth();
@@ -27,7 +28,6 @@ const CreateAdvertisement = () => {
 
     const [loading, setLoading] = useState(false);
     const [predicting, setPredicting] = useState(false);
-    const [responseMessage, setResponseMessage] = useState({ type: '', text: '' });
     const [autoPredictedPrice, setAutoPredictedPrice] = useState(null);
 
     const handleChange = (e) => {
@@ -116,7 +116,14 @@ const CreateAdvertisement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setResponseMessage({ type: '', text: '' });
+
+        if (Number(formData.price) < 0 || Number(formData.mileage) < 0 || Number(formData.ManufactureYear) < 0) {
+            goeyToast.error('Validation Warning', {
+                description: 'Price, mileage, and manufacture year cannot be negative.'
+            });
+            setLoading(false);
+            return;
+        }
 
         const finalizedPayload = {
             ...formData,
@@ -136,7 +143,9 @@ const CreateAdvertisement = () => {
         try {
             const res = await axios.post(`${API_BASE_URL}/api/advertisement/advertisements`, finalizedPayload);
             if (res.data.success) {
-                setResponseMessage({ type: 'success', text: 'Ad post created live across your vehicle marketplace!' });
+                goeyToast.success('Advertisement Listed', {
+                    description: 'Ad post created live across your vehicle marketplace!'
+                });
                 setFormData({
                     title: '', description: '', vehicleName: '', model: '', price: '',
                     ManufactureYear: '', mileage: '', fuelType: 'Petrol', transmission: 'Manual',
@@ -145,7 +154,10 @@ const CreateAdvertisement = () => {
                 setAutoPredictedPrice(null);
             }
         } catch (err) {
-            setResponseMessage({ type: 'error', text: err.response?.data?.message || err.response?.data?.error || 'Database storage failure.' });
+            const errMsg = err.response?.data?.message || err.response?.data?.error || 'Database storage failure.';
+            goeyToast.error('Publishing Failure', {
+                description: errMsg
+            });
         } finally {
             setLoading(false);
         }
@@ -289,6 +301,7 @@ const CreateAdvertisement = () => {
                                 <input 
                                     required 
                                     type="number" 
+                                    min="1900"
                                     name="ManufactureYear" 
                                     value={formData.ManufactureYear} 
                                     onChange={handleChange} 
@@ -301,6 +314,7 @@ const CreateAdvertisement = () => {
                                 <input 
                                     required 
                                     type="number" 
+                                    min="0"
                                     name="mileage" 
                                     value={formData.mileage} 
                                     onChange={handleChange} 
@@ -322,14 +336,16 @@ const CreateAdvertisement = () => {
                             </div>
                             <div>
                                 <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Fuel Category *</label>
-                                <input 
-                                    required 
-                                    type="text" 
+                                <select 
                                     name="fuelType" 
                                     value={formData.fuelType} 
                                     onChange={handleChange} 
-                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent" 
-                                />
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent cursor-pointer"
+                                >
+                                    <option value="Petrol">Petrol</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Electric">Electric</option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Exterior Paint Color *</label>
@@ -347,6 +363,7 @@ const CreateAdvertisement = () => {
                                 <input 
                                     required 
                                     type="number" 
+                                    min="0"
                                     name="price" 
                                     value={formData.price} 
                                     onChange={handleChange} 

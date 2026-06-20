@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { FaCar, FaSignOutAlt, FaSignInAlt, FaSun, FaMoon } from 'react-icons/fa';
+import { FaCar, FaSignOutAlt, FaSignInAlt, FaSun, FaMoon, FaBars, FaTimes } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 
@@ -13,6 +13,8 @@ const Navbar = () => {
         logout();
         navigate('/login');
     };
+
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <header className="sticky top-0 z-50 bg-warm-bg/90 dark:bg-warm-dark/90 backdrop-blur-md border-b border-sand-300/50 dark:border-slate-800/80 shadow-sm transition-all duration-300">
@@ -115,6 +117,48 @@ const Navbar = () => {
                         )}
                     </div>
                 </div>
+
+                {/* Collapsible Slide Down Menu for Mobile */}
+                {isOpen && (
+                    <div className="md:hidden mt-4 pt-4 border-t border-sand-300/40 flex flex-col space-y-2">
+                        <NavLink
+                            to="/dashboard"
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) =>
+                                `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
+                                    ? 'bg-warm-dark text-white shadow-sm'
+                                    : 'text-warm-dark/80 hover:bg-white/30'
+                                }`
+                            }
+                        >
+                            Marketplace
+                        </NavLink>
+                        <NavLink
+                            to="/create-ad"
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) =>
+                                `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
+                                    ? 'bg-warm-dark text-white shadow-sm'
+                                    : 'text-warm-dark/80 hover:bg-white/30'
+                                }`
+                            }
+                        >
+                            Sell Car
+                        </NavLink>
+                        <NavLink
+                            to="/valuation"
+                            onClick={() => setIsOpen(false)}
+                            className={({ isActive }) =>
+                                `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
+                                    ? 'bg-warm-dark text-white shadow-sm'
+                                    : 'text-warm-dark/80 hover:bg-white/30'
+                                }`
+                            }
+                        >
+                            AI Valuation
+                        </NavLink>
+                    </div>
+                )}
             </div>
         </header>
     );
