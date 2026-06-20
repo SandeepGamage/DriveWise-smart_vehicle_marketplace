@@ -169,6 +169,7 @@ const ValuationCalculator = () => {
                             <input 
                                 required 
                                 type="number" 
+                                min="1900"
                                 name="ManufactureYear" 
                                 value={calcData.ManufactureYear} 
                                 onChange={handleChange} 
@@ -182,6 +183,7 @@ const ValuationCalculator = () => {
                             <input 
                                 required 
                                 type="number" 
+                                min="0"
                                 name="mileage" 
                                 value={calcData.mileage} 
                                 onChange={handleChange} 
@@ -208,6 +210,7 @@ const ValuationCalculator = () => {
                             <input 
                                 required 
                                 type="number" 
+                                min="1"
                                 name="powerHp" 
                                 value={calcData.powerHp} 
                                 onChange={handleChange} 
