@@ -136,18 +136,7 @@ const Dashboard = () => {
         setPagination(prev => ({ ...prev, page: 1 }));
     };
 
-    const handleDeleteAd = async (id) => {
-        try {
-            const res = await axios.delete(`http://localhost:3000/api/advertisement/advertisements/${id}`);
-            if (res.data.success) {
-                setAds(prev => prev.filter(ad => (ad._id || ad.id || ad.addId) !== id));
-                alert('Listing removed successfully.');
-                fetchAdvertisements(1);
-            }
-        } catch (err) {
-            alert('Failed to delete listing: ' + (err.response?.data?.message || err.message));
-        }
-    };
+
 
     return (
         <div className="space-y-8 min-h-screen pb-16 transition-colors duration-300">
@@ -376,7 +365,6 @@ const Dashboard = () => {
                         <AdvertisementCard
                             key={ad._id || ad.id || ad.addId}
                             ad={ad}
-                            onDelete={handleDeleteAd}
                         />
                     ))}
                 </div>

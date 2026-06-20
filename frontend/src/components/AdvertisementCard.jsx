@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import {
     FaRoad,
     FaCog,
-    FaTrashAlt,
     FaRegBookmark,
     FaBookmark
 } from 'react-icons/fa';
 
-const AdvertisementCard = ({ ad, onDelete }) => {
+const AdvertisementCard = ({ ad }) => {
     const [currentImgIdx, setCurrentImgIdx] = useState(0);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -179,21 +178,7 @@ const AdvertisementCard = ({ ad, onDelete }) => {
                         >
                             <span>View Details</span>
                         </Link>
-                        {onDelete && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    if (confirm('Are you sure you want to delete this listing?')) {
-                                        onDelete(adId);
-                                    }
-                                }}
-                                className="w-9 h-9 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm"
-                                title="Delete Listing"
-                            >
-                                <FaTrashAlt className="text-xs" />
-                            </button>
-                        )}
+
                     </div>
                 </div>
             </div>
