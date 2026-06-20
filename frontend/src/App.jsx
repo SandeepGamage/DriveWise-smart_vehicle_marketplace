@@ -4,6 +4,7 @@ import CreateAdvertisement from './pages/advertisement/CreateAdvertisement.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import AdvertisementDetails from './pages/advertisement/AdvertisementDetails.jsx';
 import ValuationCalculator from './pages/valuation/ValuationCalculator.jsx';
+import LandingPage from './pages/landing/LandingPage.jsx';
 import Layout from './components/Layout.jsx';
 
 function App() {
@@ -11,8 +12,8 @@ function App() {
         <Router>
             <Layout>
                 <Routes>
-                    {/* Home / Default route redirection */}
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    {/* Home / Landing Page */}
+                    <Route path="/" element={<LandingPage />} />
 
                     {/* Main Marketplace browsing feed */}
                     <Route path="/dashboard" element={<Dashboard />} />
