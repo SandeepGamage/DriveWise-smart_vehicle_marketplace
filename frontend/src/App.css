@@ -1,0 +1,216 @@
+:root {
+	--brand-ink: #0f172a;
+	--brand-blue: #145dff;
+	--brand-cyan: #00b8d9;
+	--surface: #ffffff;
+	--surface-soft: #f8fafc;
+	--text-main: #0f172a;
+	--text-muted: #475569;
+	--danger: #c62828;
+	--success: #1e8e3e;
+	--border: #dbe3ec;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+	color: var(--text-main);
+	background: radial-gradient(circle at 18% 20%, #dff2ff 0%, transparent 42%),
+		radial-gradient(circle at 88% 8%, #d6fff5 0%, transparent 30%),
+		#f3f8ff;
+}
+
+.login-page {
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+	position: relative;
+	overflow: hidden;
+}
+
+.login-gradient {
+	position: absolute;
+	width: 660px;
+	height: 660px;
+	background: linear-gradient(140deg, rgba(20, 93, 255, 0.2), rgba(0, 184, 217, 0.22));
+	border-radius: 50%;
+	top: -220px;
+	right: -180px;
+	filter: blur(24px);
+	pointer-events: none;
+}
+
+.login-card {
+	width: min(460px, 100%);
+	padding: 34px;
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.95);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	box-shadow: 0 16px 42px rgba(15, 23, 42, 0.12);
+	backdrop-filter: blur(8px);
+	z-index: 1;
+	animation: card-enter 320ms ease-out;
+}
+
+.login-tag {
+	display: inline-block;
+	margin: 0;
+	margin-bottom: 12px;
+	font-size: 12px;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--brand-blue);
+	background: #e7f0ff;
+	padding: 7px 10px;
+	border-radius: 999px;
+	font-weight: 700;
+}
+
+.login-card h1 {
+	margin: 0;
+	font-size: 1.95rem;
+	line-height: 1.2;
+}
+
+.login-subtitle {
+	margin: 10px 0 22px;
+	color: var(--text-muted);
+	font-size: 0.95rem;
+}
+
+.login-form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.login-form label {
+	font-weight: 600;
+	font-size: 0.92rem;
+}
+
+.login-form input {
+	width: 100%;
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 12px 13px;
+	font-size: 0.98rem;
+	outline: none;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	background-color: var(--surface-soft);
+}
+
+.login-form input:focus {
+	border-color: #6f93ff;
+	box-shadow: 0 0 0 3px rgba(20, 93, 255, 0.12);
+}
+
+.password-wrap {
+	position: relative;
+}
+
+.password-wrap input {
+	padding-right: 78px;
+}
+
+.toggle-password {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	border: none;
+	background: transparent;
+	color: var(--brand-blue);
+	cursor: pointer;
+	font-weight: 700;
+	font-size: 0.84rem;
+}
+
+.toggle-password:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.login-feedback {
+	margin: 2px 0;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.login-feedback.error {
+	color: var(--danger);
+}
+
+.login-feedback.success {
+	color: var(--success);
+}
+
+.login-submit {
+	margin-top: 4px;
+	border: none;
+	border-radius: 11px;
+	background: linear-gradient(110deg, var(--brand-blue), var(--brand-cyan));
+	color: white;
+	font-size: 1rem;
+	font-weight: 700;
+	padding: 12px;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.login-submit:hover:not(:disabled) {
+	transform: translateY(-1px);
+	box-shadow: 0 8px 20px rgba(20, 93, 255, 0.28);
+}
+
+.login-submit:disabled {
+	cursor: not-allowed;
+	opacity: 0.72;
+}
+
+.login-footer {
+	margin-top: 16px;
+	color: var(--text-muted);
+	font-size: 0.92rem;
+}
+
+.login-footer a {
+	color: var(--brand-blue);
+	text-decoration: none;
+	font-weight: 700;
+}
+
+.login-footer a:hover {
+	text-decoration: underline;
+}
+
+@keyframes card-enter {
+	from {
+		opacity: 0;
+		transform: translateY(12px) scale(0.98);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@media (max-width: 520px) {
+	.login-page {
+		padding: 14px;
+	}
+
+	.login-card {
+		padding: 24px 18px;
+	}
+
+	.login-card h1 {
+		font-size: 1.6rem;
+	}
+}

@@ -56,8 +56,6 @@ export async function getAllUsers(req,res){
 
 export async function createUser(req, res) {
     try {
-        console.log(".........................")
-        console.log(req.body);
         const {userName, email, password, phoneNum} = req.body;
         const profilePic = req.file;
 
@@ -162,3 +160,54 @@ export async function loginUser(req,res){
     }
 }
 
+export async function suspendUser(req,res){
+    try{
+        const userID = req.params.id;
+
+        if(req.user.role !== "admin"){
+            return res.status(400).json({
+                message : "Login as admin to complete the process."
+            })
+        }
+
+        const suspendedUser = await User.findOneAndUpdate(
+            { UID: userID },
+            { isSuspend: true },
+            { new: true }
+        );
+
+        if (!suspendedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message : "User suspended successfully!"
+        });
+
+    }catch(err){
+        res.status(500).json({
+            message : "Internal sever error",
+            error : err.message
+        });
+    }
+}
+
+export async function updateUser(req,res){
+    try{
+        const UserID = req.user.UID;
+
+        const User = findOne({UID});
+
+        if(!User){
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const {userName, email, password, phoneNum} = req.body;
+
+    }catch(err){
+        res.status(500).json({
+            message : "Internal sever error",
+            error : err.message
+        });
+    }
+}

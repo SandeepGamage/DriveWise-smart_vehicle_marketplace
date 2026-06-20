@@ -9,7 +9,7 @@ export default async function uploadImage(file) {
     try {
         const fileName = `${Date.now()}-${file.originalname}`;
         const { data, error } = await supabase.storage
-            .from("profile_pics")
+            .from("images")
             .upload(fileName, file.buffer, {
                 contentType: file.mimetype,
                 upsert: false
