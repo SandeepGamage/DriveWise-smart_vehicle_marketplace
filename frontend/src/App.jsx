@@ -1,15 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import CreateAdvertisement from './pages/advertisement/CreateAdvertisement.jsx';
-import Dashboard from './pages/dashboard/Dashboard.jsx';
+import Dashboard from './pages/dashboard/MarketPlace.jsx';
 import AdvertisementDetails from './pages/advertisement/AdvertisementDetails.jsx';
 import ValuationCalculator from './pages/valuation/ValuationCalculator.jsx';
 import LandingPage from './pages/landing/LandingPage.jsx';
 import Layout from './components/Layout.jsx';
+import { GoeyToaster } from 'goey-toast';
+import 'goey-toast/styles.css';
 
 function App() {
     return (
         <Router>
+            <GoeyToaster position="top-right" />
             <Layout>
                 <Routes>
                     {/* Home / Landing Page */}

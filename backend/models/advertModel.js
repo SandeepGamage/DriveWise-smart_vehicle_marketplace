@@ -24,15 +24,18 @@ const advertSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, 'Price cannot be negative']
     },
     ManufactureYear: {
         type: Number,
-        required: true
+        required: true,
+        min: [1900, 'Manufacture year must be at least 1900']
     },
     mileage: {
         type: Number,
-        required: true
+        required: true,
+        min: [0, 'Mileage cannot be negative']
     },
     fuelType: {
         type: String,
