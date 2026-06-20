@@ -7,7 +7,6 @@ import {
     FaSync, 
     FaRoad, 
     FaCog, 
-    FaChevronRight, 
     FaSlidersH,
     FaInfoCircle,
     FaCoins
@@ -83,33 +82,33 @@ const ValuationCalculator = () => {
     const baseMileage = 50000;
     const mileageDiff = (Number(calcData.mileage) || 0) - baseMileage;
     const mileageImpact = mileageDiff > 0 
-        ? `⚠️ High wear penalty: -${(mileageDiff * 0.12).toLocaleString()} LKR estimated`
-        : `✓ Low mileage credit: +${(Math.abs(mileageDiff) * 0.12).toLocaleString()} LKR estimated`;
+        ? `Penalty: -${(mileageDiff * 0.12).toLocaleString()} LKR`
+        : `Credit: +${(Math.abs(mileageDiff) * 0.12).toLocaleString()} LKR`;
 
     const ageDiff = new Date().getFullYear() - (Number(calcData.ManufactureYear) || 2020);
     const ageImpact = ageDiff > 0
-        ? `⚠️ ${ageDiff}-year age factor: -${(ageDiff * 380000).toLocaleString()} LKR offset`
-        : `✓ Showroom premium: +250,000 LKR offset`;
+        ? `Age: -${(ageDiff * 380000).toLocaleString()} LKR`
+        : `Premium: +250,000 LKR`;
 
     const powerFactor = (Number(calcData.powerHp) || 150) - 150;
     const powerImpact = powerFactor > 0
-        ? `✓ High output bonus (+${powerFactor}hp): +${(powerFactor * 14000).toLocaleString()} LKR`
+        ? `Bonus: +${(powerFactor * 14000).toLocaleString()} LKR`
         : powerFactor < 0
-            ? `⚠️ Low output offset (${powerFactor}hp): -${(Math.abs(powerFactor) * 14000).toLocaleString()} LKR`
-            : `✓ Standard engine output model baseline`;
+            ? `Offset: -${(Math.abs(powerFactor) * 14000).toLocaleString()} LKR`
+            : `Standard output`;
 
     return (
-        <div className="space-y-8 pb-16">
+        <div className="space-y-8 pb-16 transition-colors duration-300">
             {/* Header Title Section */}
-            <div className="pb-6 border-b border-slate-800/80">
-                <h1 className="text-3xl font-black text-slate-100 tracking-tight flex items-center gap-2.5">
-                    <span className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/15">
-                        <FaBrain />
+            <div className="pb-6 border-b border-sand-300/50">
+                <h1 className="text-4xl font-black text-warm-dark tracking-tight flex items-center gap-2.5 font-sans">
+                    <span className="w-10 h-10 rounded-2xl bg-white border border-sand-300/60 text-warm-accent flex items-center justify-center shadow-sm">
+                        <FaBrain className="text-lg" />
                     </span>
                     <span>AI Valuation Engine</span>
-                    <span className="text-xs px-2.5 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full font-bold uppercase tracking-wider">Predictive</span>
+                    <span className="text-[10px] px-2.5 py-1 bg-warm-dark text-white rounded-full font-black uppercase tracking-wider">Predictive</span>
                 </h1>
-                <p className="text-slate-400 text-sm mt-2">
+                <p className="text-slate-500 text-sm mt-2">
                     Enter vehicle characteristics to query raw scikit-learn pipeline weights live and calibrate pricing models dynamically.
                 </p>
             </div>
@@ -117,15 +116,15 @@ const ValuationCalculator = () => {
             {/* Split Grid layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 {/* Left Side: Input parameters Form */}
-                <div className="lg:col-span-6 bg-slate-900 border border-slate-850 p-6 rounded-3xl shadow-md space-y-6">
-                    <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
-                        <FaSlidersH className="text-blue-400 text-xs" />
-                        <h2 className="text-xs font-bold text-slate-200 uppercase tracking-widest">Calibration Input Panel</h2>
+                <div className="lg:col-span-6 bg-white border border-sand-300/50 p-6 rounded-[2rem] shadow-sm space-y-6">
+                    <div className="flex items-center gap-2 pb-3 border-b border-sand-200">
+                        <FaSlidersH className="text-warm-accent text-xs" />
+                        <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest">Calibration Input Panel</h2>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Brand / Make *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Brand / Make *</label>
                             <select 
                                 required 
                                 name="vehicleName" 
@@ -139,7 +138,7 @@ const ValuationCalculator = () => {
                                         model: models.length > 0 ? models[0] : '' 
                                     }));
                                 }} 
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors cursor-pointer"
                             >
                                 <option value="">Select Brand</option>
                                 {Object.keys(brandModelMap).map((brand) => (
@@ -149,14 +148,14 @@ const ValuationCalculator = () => {
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Model Family *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Model Family *</label>
                             <select 
                                 required 
                                 name="model" 
                                 value={calcData.model} 
                                 onChange={handleChange} 
                                 disabled={!calcData.vehicleName}
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-40 cursor-pointer"
+                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors disabled:opacity-40 cursor-pointer"
                             >
                                 <option value="">Select Model</option>
                                 {(brandModelMap[calcData.vehicleName] || []).map((model) => (
@@ -166,38 +165,38 @@ const ValuationCalculator = () => {
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Manufacture Year *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Manufacture Year *</label>
                             <input 
                                 required 
                                 type="number" 
                                 name="ManufactureYear" 
                                 value={calcData.ManufactureYear} 
                                 onChange={handleChange} 
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors"
                                 placeholder="e.g. 2020" 
                             />
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">True Mileage (km) *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">True Mileage (km) *</label>
                             <input 
                                 required 
                                 type="number" 
                                 name="mileage" 
                                 value={calcData.mileage} 
                                 onChange={handleChange} 
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors"
                                 placeholder="e.g. 45000" 
                             />
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Transmission Type *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Transmission Type *</label>
                             <select 
                                 name="transmission" 
                                 value={calcData.transmission} 
                                 onChange={handleChange} 
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors cursor-pointer"
                             >
                                 <option value="Manual">Manual</option>
                                 <option value="Automatic">Automatic</option>
@@ -205,60 +204,60 @@ const ValuationCalculator = () => {
                         </div>
 
                         <div>
-                            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Horsepower (power_hp) *</label>
+                            <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Horsepower (HP) *</label>
                             <input 
                                 required 
                                 type="number" 
                                 name="powerHp" 
                                 value={calcData.powerHp} 
                                 onChange={handleChange} 
-                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-sand-100 border border-sand-200/50 rounded-full px-4 py-2.5 text-xs text-warm-dark focus:outline-none focus:border-warm-accent transition-colors"
                                 placeholder="e.g. 150" 
                             />
                         </div>
                     </div>
 
-                    <div className="p-4 bg-slate-950/40 border border-slate-850/50 rounded-2xl text-[11px] text-slate-500 leading-relaxed flex items-start gap-2.5">
-                        <FaInfoCircle className="text-blue-400 text-sm mt-0.5 shrink-0" />
+                    <div className="p-4 bg-sand-100 border border-sand-200/50 rounded-2xl text-[11px] text-slate-500 leading-relaxed flex items-start gap-2.5">
+                        <FaInfoCircle className="text-warm-accent text-sm mt-0.5 shrink-0" />
                         <p>
-                            Predictions are calibrated instantly in the background. Changing parameters triggers asynchronous requests to the Flask server, returning the calculated results using Euro-LKR rates.
+                            Predictions are calibrated instantly in the background. Changing parameters triggers asynchronous requests to the server, returning the calculated results using Euro-LKR rates.
                         </p>
                     </div>
                 </div>
 
-                {/* Right Side: Dynamic Outputs display card */}
+                {/* Right Side: Dynamic Outputs display card (Contrast Dark Container) */}
                 <div className="lg:col-span-6 space-y-6">
                     {/* Glowing main output card */}
-                    <div className="bg-slate-900 border-2 border-indigo-500/30 rounded-3xl p-8 shadow-[0_0_30px_rgba(99,102,241,0.15)] flex flex-col justify-between min-h-[300px] relative overflow-hidden">
+                    <div className="bg-warm-dark text-white rounded-[2.5rem] p-8 shadow-xl flex flex-col justify-between min-h-[300px] relative overflow-hidden border border-white/5">
                         
                         {/* Interactive overlay loader */}
                         {predicting && (
-                            <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-15">
-                                <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-2xl">
-                                    <FaSync className="text-indigo-400 animate-spin text-xs" />
-                                    <span className="text-xs font-bold text-slate-300">Recalculating weights...</span>
+                            <div className="absolute inset-0 bg-warm-dark/75 backdrop-blur-sm flex items-center justify-center z-15">
+                                <div className="flex items-center gap-2 bg-warm-dark-card border border-white/10 px-4 py-2.5 rounded-full">
+                                    <FaSync className="text-warm-accent animate-spin text-xs" />
+                                    <span className="text-xs font-black uppercase tracking-wider text-slate-300">Recalculating...</span>
                                 </div>
                             </div>
                         )}
 
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <span className="text-[9px] uppercase font-black tracking-widest px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
+                                <span className="text-[9px] uppercase font-black tracking-widest px-3 py-1 bg-white/10 text-slate-300 border border-white/10 rounded-full">
                                     DriveWise Valuation Report
                                 </span>
-                                <span className="text-slate-500 text-[10px] font-mono">Status: Ready</span>
+                                <span className="text-slate-400 text-[10px] font-mono">Status: Ready</span>
                             </div>
 
                             {predictedPrice ? (
                                 <div className="space-y-2 py-4">
-                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Estimated Market Value</span>
+                                    <span className="text-[10px] font-black text-slate-450 uppercase tracking-widest block">Estimated Market Value</span>
                                     <div className="flex items-baseline gap-1.5">
-                                        <span className="text-4xl font-black text-emerald-400 tracking-tight drop-shadow-[0_2px_10px_rgba(52,211,153,0.15)]">
+                                        <span className="text-4xl font-black text-emerald-450 tracking-tight block drop-shadow-[0_2px_10px_rgba(52,211,153,0.15)]">
                                             {priceLKR.toLocaleString()}
                                         </span>
-                                        <span className="text-lg font-bold text-emerald-500">LKR</span>
+                                        <span className="text-lg font-black text-emerald-500">LKR</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-slate-400 text-xs font-semibold">
+                                    <div className="flex items-center gap-1.5 text-slate-400 text-xs font-bold">
                                         <FaCoins className="text-[10px] text-slate-500" />
                                         <span>Approx. {priceEUR.toLocaleString()} EUR equivalent</span>
                                     </div>
@@ -266,26 +265,26 @@ const ValuationCalculator = () => {
                             ) : (
                                 <div className="py-12 text-center space-y-2">
                                     <span className="text-3xl block">🔮</span>
-                                    <p className="text-slate-500 text-xs italic">Awaiting dynamic specs parameters to compute valuation...</p>
+                                    <p className="text-slate-400 text-xs italic">Awaiting dynamic specs parameters to compute valuation...</p>
                                 </div>
                             )}
                         </div>
 
                         {predictedPrice && (
-                            <div className="border-t border-slate-800/80 pt-6 mt-4 space-y-3 text-[11px] text-slate-400">
-                                <h4 className="font-bold text-slate-300 uppercase tracking-wide text-[10px]">Depreciation Breakdown</h4>
+                            <div className="border-t border-white/10 pt-6 mt-4 space-y-3 text-[11px] text-slate-400">
+                                <h4 className="font-black text-slate-300 uppercase tracking-widest text-[9px]">Depreciation Breakdown</h4>
                                 <ul className="space-y-2">
                                     <li className="flex items-center justify-between">
                                         <span>Wear Parameter ({calcData.mileage} km)</span>
-                                        <span className="font-semibold text-slate-300">{mileageImpact}</span>
+                                        <span className={`font-bold ${calcData.mileage > 50000 ? 'text-amber-400' : 'text-emerald-400'}`}>{mileageImpact}</span>
                                     </li>
                                     <li className="flex items-center justify-between">
                                         <span>Age Parameter (Mfg {calcData.ManufactureYear})</span>
-                                        <span className="font-semibold text-slate-300">{ageImpact}</span>
+                                        <span className={`font-bold ${new Date().getFullYear() - calcData.ManufactureYear > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>{ageImpact}</span>
                                     </li>
                                     <li className="flex items-center justify-between">
                                         <span>Power Parameter ({calcData.powerHp} hp)</span>
-                                        <span className="font-semibold text-slate-300">{powerImpact}</span>
+                                        <span className={`font-bold ${calcData.powerHp > 150 ? 'text-emerald-400' : calcData.powerHp < 150 ? 'text-amber-400' : 'text-slate-400'}`}>{powerImpact}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -293,18 +292,18 @@ const ValuationCalculator = () => {
                     </div>
 
                     {/* Model Parameter Insights */}
-                    <div className="bg-slate-900 border border-slate-850 p-6 rounded-3xl shadow-sm space-y-4">
-                        <div className="flex items-center gap-2">
-                            <FaInfoCircle className="text-indigo-400 text-xs" />
-                            <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider">How to Change live valuation logic?</h3>
+                    <div className="bg-warm-dark text-white rounded-[2.5rem] p-8 shadow-xl space-y-6 border border-white/5">
+                        <div className="flex items-center gap-2.5 pb-2 border-b border-white/10">
+                            <FaInfoCircle className="text-warm-accent text-sm" />
+                            <h3 className="text-xs font-black uppercase tracking-wider">Calibration Architecture</h3>
                         </div>
                         <p className="text-slate-400 text-xs leading-relaxed font-light">
-                            The live valuation model runs on a Python scikit-learn pipeline located under <code>/prediction-service</code>. To change the coefficients or support more features (like fuel categories or color weighting), follow the instructions in the model training file.
+                            The live valuation model runs on a Python scikit-learn pipeline. To update coefficients or import additional features, configure the matrix calibration arrays inside the prediction service.
                         </p>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 pt-2">
                             <Link 
                                 to="/create-ad" 
-                                className="flex-1 bg-slate-800 hover:bg-slate-700/80 border border-slate-700/60 text-slate-200 hover:text-white font-bold py-2 rounded-xl text-center text-xs transition-colors"
+                                className="flex-1 bg-warm-accent hover:bg-warm-accent-hover text-warm-dark font-black py-3 rounded-full text-center text-xs transition-colors uppercase tracking-widest shadow-md"
                             >
                                 Sell Vehicle with AI Tags
                             </Link>

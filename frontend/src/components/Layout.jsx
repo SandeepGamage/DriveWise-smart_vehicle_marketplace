@@ -4,8 +4,8 @@ import { FaHeart, FaGithub, FaCar, FaShieldAlt } from 'react-icons/fa';
 
 const Layout = ({ children }) => {
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-            {/* Glassmorphism Navigation Bar */}
+        <div className="min-h-screen bg-warm-bg text-warm-dark flex flex-col font-sans transition-colors duration-300">
+            {/* Navigation Bar */}
             <Navbar />
 
             {/* Main Application Feed */}
@@ -14,12 +14,12 @@ const Layout = ({ children }) => {
             </main>
 
             {/* Premium Dark Footer */}
-            <footer className="bg-slate-900 border-t border-slate-800/80 mt-auto py-12 px-4 sm:px-6 lg:px-8">
+            <footer className="bg-warm-dark text-slate-300 border-t border-sand-300/10 mt-auto py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="space-y-4 col-span-1 md:col-span-2">
                         <div className="flex items-center space-x-2.5">
                             <span className="text-2xl">🚗</span>
-                            <span className="text-xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-indigo-500 bg-clip-text text-transparent tracking-tight">
+                            <span className="text-xl font-black bg-gradient-to-r from-warm-accent to-amber-500 bg-clip-text text-transparent tracking-tight">
                                 DriveWise
                             </span>
                         </div>
@@ -34,33 +34,36 @@ const Layout = ({ children }) => {
                     </div>
 
                     <div>
-                        <h4 className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-3">Quick Navigation</h4>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Quick Navigation</h4>
                         <ul className="space-y-2 text-xs text-slate-400">
                             <li>
-                                <a href="/dashboard" className="hover:text-blue-400 transition-colors">Marketplace Directory</a>
+                                <a href="/" className="hover:text-warm-accent transition-colors">Home Landing Page</a>
                             </li>
                             <li>
-                                <a href="/create-ad" className="hover:text-blue-400 transition-colors">Sell Your Car</a>
+                                <a href="/dashboard" className="hover:text-warm-accent transition-colors">Marketplace Directory</a>
                             </li>
                             <li>
-                                <span className="text-slate-600 cursor-not-allowed">AI Valuation Engine (Live)</span>
+                                <a href="/create-ad" className="hover:text-warm-accent transition-colors">Sell Your Car</a>
+                            </li>
+                            <li>
+                                <span className="text-slate-650 cursor-not-allowed">AI Valuation Engine (Live)</span>
                             </li>
                         </ul>
                     </div>
 
                     <div>
-                        <h4 className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-3">System & Security</h4>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">System & Security</h4>
                         <ul className="space-y-2 text-xs text-slate-400">
                             <li className="flex items-center space-x-1.5">
-                                <FaShieldAlt className="text-emerald-400" />
+                                <FaShieldAlt className="text-emerald-500" />
                                 <span>SSL Encrypted Data</span>
                             </li>
                             <li className="flex items-center space-x-1.5">
-                                <FaCar className="text-blue-400" />
+                                <FaCar className="text-warm-accent" />
                                 <span>1,200+ Verified Ads</span>
                             </li>
                             <li className="flex items-center space-x-1.5">
-                                <FaGithub className="text-slate-400" />
+                                <FaGithub className="text-slate-450" />
                                 <span>Open Source Engine</span>
                             </li>
                         </ul>
