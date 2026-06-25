@@ -70,7 +70,11 @@ export function Login() {
             setSuccessMessage(successMsg + ' Redirecting...');
 
             setTimeout(() => {
-                navigate('/');
+                if (user.isAdmin) {
+                    navigate('/admin-dashboard');
+                } else {
+                    navigate('/');
+                }
             }, 500);
         } catch (requestError) {
             const serverMessage = requestError?.response?.data?.message;

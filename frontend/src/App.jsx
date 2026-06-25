@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-ro
 import CreateAdvertisement from './pages/advertisement/CreateAdvertisement.jsx';
 import Dashboard from './pages/dashboard/MarketPlace.jsx';
 import UserDashboard from './pages/dashboard/userDashboard.jsx';
+import AdminDashboard from './pages/dashboard/AdminDashboard.jsx';
 import AdvertisementDetails from './pages/advertisement/AdvertisementDetails.jsx';
 import ValuationCalculator from './pages/valuation/ValuationCalculator.jsx';
 import LandingPage from './pages/landing/LandingPage.jsx';
@@ -30,6 +31,9 @@ function App() {
 
                     {/* Personal account dashboard */}
                     <Route path="/user-dashboard" element={<UserDashboard />} />
+
+                    {/* Admin management console */}
+                    <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
                     {/* Form to list vehicles and run ML predictive logic */}
                     <Route path="/create-ad" element={<CreateAdvertisement />} />
