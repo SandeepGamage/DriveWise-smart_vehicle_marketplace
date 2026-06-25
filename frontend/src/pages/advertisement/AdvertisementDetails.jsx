@@ -233,6 +233,16 @@ const AdvertisementDetails = () => {
                                     <span className="text-xs font-black text-warm-dark dark:text-slate-100 truncate max-w-[80px]" title={ad.userId}>{ad.userId}</span>
                                 </div>
                             </div>
+
+                            {ad.city && (
+                                <div className="p-3 bg-sand-100 dark:bg-slate-900 border border-sand-200/50 dark:border-slate-800/80 rounded-2xl flex items-center gap-3">
+                                    <span className="text-sm">📍</span>
+                                    <div>
+                                        <span className="text-[9px] text-slate-400 dark:text-slate-500 block uppercase font-bold tracking-wider">Location</span>
+                                        <span className="text-xs font-black text-warm-dark dark:text-slate-100 truncate max-w-[120px]" title={`${ad.city}, ${ad.district}`}>{ad.city}, {ad.district}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Description Text */}
@@ -265,6 +275,13 @@ const AdvertisementDetails = () => {
                         <p className="text-xs text-slate-400 leading-relaxed">
                             {ad.title}
                         </p>
+
+                        {ad.city && (
+                            <div className="flex items-center gap-1.5 text-xs text-slate-350 font-bold bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full w-fit">
+                                <span>📍</span>
+                                <span>{ad.city}, {ad.district}, {ad.province}</span>
+                            </div>
+                        )}
 
                         <div className="flex items-baseline justify-between border-t border-b border-white/10 py-6">
                             <div>

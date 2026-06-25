@@ -57,14 +57,17 @@ export const createAdvertisement = async (req, res) => {
             images,
             model,
             predictedPrice,
-            userId
+            userId,
+            province,
+            district,
+            city
         } = req.body;
 
         
-        if (!title || !description || !vehicleName || !price || !userId) {
+        if (!title || !description || !vehicleName || !price || !userId || !province || !district || !city) {
             return res.status(400).json({
                 success: false,
-                message: 'Please provide all required fields'
+                message: 'Please provide all required fields, including province, district, and city'
             });
         }
 
@@ -93,6 +96,8 @@ export const createAdvertisement = async (req, res) => {
         }
 
        
+        const finalUserId = req.user.UID || String(req.user._id);
+
         const newAdvert = new Advert({
             title,
             description,
@@ -106,7 +111,10 @@ export const createAdvertisement = async (req, res) => {
             images,
             model,
             predictedPrice: finalPredictedPrice, // Now safely saved in LKR!
-            userId,
+            userId: finalUserId,
+            province,
+            district,
+            city,
             isActive: true
         });
 
@@ -263,7 +271,22 @@ export const updateAdvertisement = async (req, res) => {
         const { id } = req.params;
         const updateData = req.body;
 
-      
+        const advertisement = await Advert.findById(id);
+        if (!advertisement) {
+            return res.status(404).json({
+                success: false,
+                message: 'Advertisement not found'
+            });
+        }
+
+        const tokenUserId = req.user.UID || String(req.user._id);
+        if (advertisement.userId !== tokenUserId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Unauthorized: You can only modify your own advertisements'
+            });
+        }
+
         delete updateData.isActive;
 
         if ((updateData.price !== undefined && Number(updateData.price) < 0) || 
@@ -332,6 +355,22 @@ export const deleteAdvertisement = async (req, res) => {
     try {
         const { id } = req.params;
 
+        const advertisement = await Advert.findById(id);
+        if (!advertisement) {
+            return res.status(404).json({
+                success: false,
+                message: 'Advertisement not found'
+            });
+        }
+
+        const tokenUserId = req.user.UID || String(req.user._id);
+        if (advertisement.userId !== tokenUserId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Unauthorized: You can only delete your own advertisements'
+            });
+        }
+
         const deletedAdvert = await Advert.findByIdAndDelete(id);
 
         if (!deletedAdvert) {
@@ -369,6 +408,14 @@ export const toggleAdvertisementStatus = async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: 'Advertisement not found'
+            });
+        }
+
+        const tokenUserId = req.user.UID || String(req.user._id);
+        if (advertisement.userId !== tokenUserId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Unauthorized: You can only modify your own advertisements'
             });
         }
 

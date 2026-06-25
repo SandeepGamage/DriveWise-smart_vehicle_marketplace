@@ -90,6 +90,11 @@ export async function createUser(req, res) {
             return res.status(400).json({ message: "User already exists with this email. Try with another Email!" });
         }
 
+        const isUsernameTaken = await User.findOne({ userName });
+        if (isUsernameTaken) {
+            return res.status(400).json({ message: "Username is already taken. Please choose another username!" });
+        }
+
         if (password.length < 6) {
             return res.status(400).json({ message: "Password must be at least 6 characters long" });
         }
@@ -104,7 +109,11 @@ export async function createUser(req, res) {
 
         let imageUrl = undefined;
         if (profilePic) {
-            imageUrl = await uploadImage(profilePic);
+            try {
+                imageUrl = await uploadImage(profilePic);
+            } catch (uploadError) {
+                console.error("❌ Profile picture upload failed, falling back to default image:", uploadError.message);
+            }
         }
 
         const newUser = new User({
@@ -130,6 +139,7 @@ export async function createUser(req, res) {
         });
 
     } catch (err) {
+        console.error("❌ Error in createUser:", err);
         res.status(500).json({
             message: "Error creating user",
             error: err.message

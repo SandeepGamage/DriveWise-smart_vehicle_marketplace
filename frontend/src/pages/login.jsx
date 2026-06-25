@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCar, FaSignInAlt, FaExclamationTriangle, FaCheckCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext.jsx';
+import { goeyToast } from 'goey-toast';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -24,13 +25,17 @@ export function Login() {
         const trimmedEmail = formData.email.trim();
 
         if (!trimmedEmail || !formData.password.trim()) {
-            setError('Email and password are required.');
+            const msg = 'Email and password are required.';
+            goeyToast.error('Validation Warning', { description: msg });
+            setError(msg);
             return false;
         }
 
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(trimmedEmail)) {
-            setError('Please enter a valid email address.');
+            const msg = 'Please enter a valid email address.';
+            goeyToast.error('Validation Warning', { description: msg });
+            setError(msg);
             return false;
         }
 
@@ -58,14 +63,22 @@ export function Login() {
 
             login(user, token);
 
-            setSuccessMessage(message || 'Login successful. Redirecting...');
+            const successMsg = message || 'Welcome back to DriveWise!';
+            goeyToast.success('Login Successful', {
+                description: successMsg
+            });
+            setSuccessMessage(successMsg + ' Redirecting...');
 
             setTimeout(() => {
                 navigate('/');
             }, 500);
         } catch (requestError) {
             const serverMessage = requestError?.response?.data?.message;
-            setError(serverMessage || 'Unable to login. Please try again.');
+            const errMsg = serverMessage || 'Unable to login. Please try again.';
+            goeyToast.error('Login Failed', {
+                description: errMsg
+            });
+            setError(errMsg);
         } finally {
             setIsSubmitting(false);
         }
@@ -84,7 +97,7 @@ export function Login() {
                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-warm-dark dark:bg-slate-850 text-warm-accent border dark:border-slate-700 shadow-md mb-4 animate-fade-in">
                         <FaCar size={28} />
                     </div>
-                    
+
                     <div className="inline-flex items-center gap-1.5 rounded-full border border-sand-200 dark:border-slate-800 bg-sand-100 dark:bg-slate-850 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
                         <span className="h-2 w-2 rounded-full bg-warm-accent animate-pulse" />
                         Account Sign In
@@ -145,19 +158,6 @@ export function Login() {
                         </div>
                     </div>
 
-                    {error && (
-                        <div className="flex items-start gap-2.5 rounded-2xl border border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-950/20 px-4 py-3 text-xs font-semibold text-rose-700 dark:text-rose-300 shadow-inner">
-                            <FaExclamationTriangle className="mt-0.5 shrink-0 text-rose-500" />
-                            <p>{error}</p>
-                        </div>
-                    )}
-
-                    {successMessage && (
-                        <div className="flex items-start gap-2.5 rounded-2xl border border-emerald-250 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20 px-4 py-3 text-xs font-semibold text-emerald-700 dark:text-emerald-300 shadow-inner">
-                            <FaCheckCircle className="mt-0.5 shrink-0 text-emerald-600" />
-                            <p>{successMessage}</p>
-                        </div>
-                    )}
 
                     <button
                         type="submit"

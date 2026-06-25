@@ -4,10 +4,11 @@ import {
     FaRoad,
     FaCog,
     FaRegBookmark,
-    FaBookmark
+    FaBookmark,
+    FaTrashAlt
 } from 'react-icons/fa';
 
-const AdvertisementCard = ({ ad, onDelete}) => {
+const AdvertisementCard = ({ ad, onDelete, onToggleStatus }) => {
     const [currentImgIdx, setCurrentImgIdx] = useState(0);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
@@ -62,9 +63,21 @@ const AdvertisementCard = ({ ad, onDelete}) => {
 
                 {/* Floating Bookmark & Status Indicators */}
                 <div className="absolute top-4 inset-x-4 flex items-center justify-between pointer-events-auto z-10">
-                    <span className="text-[9px] uppercase font-black tracking-wider px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-sand-300/30 dark:border-slate-700/30 text-warm-dark dark:text-slate-200 shadow-sm">
-                        {ad.ManufactureYear}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                        <span className="text-[9px] uppercase font-black tracking-wider px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-sand-300/30 dark:border-slate-700/30 text-warm-dark dark:text-slate-200 shadow-sm">
+                            {ad.ManufactureYear}
+                        </span>
+                        {/* Status Badge */}
+                        {onToggleStatus && (
+                            <span className={`text-[8px] uppercase font-black tracking-wider px-2.5 py-1 rounded-full shadow-sm border backdrop-blur-md font-sans ${
+                                ad.isActive
+                                    ? 'bg-emerald-500/90 border-emerald-600/30 text-white'
+                                    : 'bg-amber-500/90 border-amber-600/30 text-white'
+                            }`}>
+                                {ad.isActive ? 'Live' : 'Unpublished'}
+                            </span>
+                        )}
+                    </div>
 
                     <button
                         onClick={(e) => {
@@ -123,13 +136,21 @@ const AdvertisementCard = ({ ad, onDelete}) => {
                     </div>
 
                     {/* Ratings & Deal Indicator */}
-                    <div className="flex items-center space-x-2 mb-3 text-[10px] font-bold">
+                    <div className="flex items-center space-x-2 mb-2 text-[10px] font-bold">
                         <span className="text-warm-accent">★ 4.96</span>
-                        <span className="text-slate-400 dark:text-slate-500 font-medium">(141 trips)</span>
+                        <span className="text-slate-400 dark:text-slate-550 font-medium">(141 trips)</span>
                         <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase border tracking-wider ${valuationColor}`}>
                             {valuationLabel}
                         </span>
                     </div>
+
+                    {/* Location Tag */}
+                    {ad.city && (
+                        <div className="flex items-center gap-1 text-[9px] font-bold text-slate-450 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                            <span>📍</span>
+                            <span>{ad.city}, {ad.district}</span>
+                        </div>
+                    )}
 
                     <p className="text-[11px] text-slate-550 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
                         {ad.description || "No description provided."}
@@ -171,13 +192,30 @@ const AdvertisementCard = ({ ad, onDelete}) => {
                     </div>
 
                     {/* Actions Row */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5 items-center">
                         <Link
                             to={`/advertisement/${adId}`}
-                            className="flex-1 bg-warm-dark dark:bg-warm-accent hover:bg-warm-dark-card dark:hover:bg-warm-accent-hover text-white dark:text-warm-dark font-black py-2.5 rounded-full transition-all flex items-center justify-center space-x-1.5 text-xs shadow-sm text-center uppercase tracking-wider text-[10px]"
+                            className="flex-1 bg-warm-dark dark:bg-warm-accent hover:bg-warm-dark-card dark:hover:bg-warm-accent-hover text-white dark:text-warm-dark font-black py-2.5 rounded-full transition-all flex items-center justify-center space-x-1.5 text-[9px] shadow-sm text-center uppercase tracking-wider"
                         >
-                            <span>View Details</span>
+                            <span>Details</span>
                         </Link>
+                        {onToggleStatus && (
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    onToggleStatus(adId);
+                                }}
+                                className={`flex-1 font-black py-2.5 rounded-full transition-all flex items-center justify-center text-[9px] shadow-sm uppercase tracking-wider border cursor-pointer ${
+                                    ad.isActive
+                                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-550 dark:text-amber-400 hover:bg-amber-500/20'
+                                        : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20'
+                                }`}
+                            >
+                                <span>{ad.isActive ? 'Unpublish' : 'Publish'}</span>
+                            </button>
+                        )}
                         {onDelete && (
                             <button
                                 onClick={(e) => {
@@ -185,7 +223,7 @@ const AdvertisementCard = ({ ad, onDelete}) => {
                                     e.preventDefault();
                                     onDelete(adId);
                                 }}
-                                className="w-9 h-9 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm"
+                                className="w-9 h-9 bg-rose-550/10 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-455 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm shrink-0"
                                 title="Delete Listing"
                             >
                                 <FaTrashAlt className="text-xs" />

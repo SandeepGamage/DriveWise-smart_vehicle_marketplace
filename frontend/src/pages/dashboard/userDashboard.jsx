@@ -137,8 +137,8 @@ const UserDashboard = () => {
 			setLoadingAds(true);
 			setPageError('');
 
-			const userIdentifiers = [currentUser._id, currentUser.UID].filter(Boolean);
-			let loadedAds = [];
+			const userIdentifiers = [currentUser.UID, currentUser._id].filter(Boolean);
+			let allLoadedAds = [];
 
 			try {
 				for (const userIdentifier of userIdentifiers) {
@@ -148,16 +148,18 @@ const UserDashboard = () => {
 							{ params: { page: 1, limit: 100 } }
 						);
 
-						if (response.data?.success) {
-							loadedAds = response.data.data || [];
-							break;
+						if (response.data?.success && response.data.data?.length > 0) {
+							const newAds = response.data.data.filter(
+								(newAd) => !allLoadedAds.some((loadedAd) => (loadedAd._id || loadedAd.id) === (newAd._id || newAd.id))
+							);
+							allLoadedAds = [...allLoadedAds, ...newAds];
 						}
-					} catch {
-						continue;
+					} catch (err) {
+						console.warn("Failed fetching ads for identifier:", userIdentifier, err.message);
 					}
 				}
 
-				setMyAds(loadedAds);
+				setMyAds(allLoadedAds);
 			} catch (error) {
 				setPageError(error.response?.data?.message || 'Could not load your advertisements.');
 				setMyAds([]);
@@ -276,7 +278,9 @@ const UserDashboard = () => {
 				setPageError('');
 				setPageMessage('');
 				try {
-					await axios.delete(`${API_BASE_URL}/api/advertisement/advertisements/${adId}`);
+					await axios.delete(`${API_BASE_URL}/api/advertisement/advertisements/${adId}`, {
+						headers: authHeaders
+					});
 					setMyAds((previous) => previous.filter((ad) => (ad._id || ad.id || ad.addId) !== adId));
 					setPageMessage('Listing removed successfully.');
 				} catch (error) {
@@ -286,6 +290,27 @@ const UserDashboard = () => {
 				}
 			},
 		});
+	};
+
+	const handleToggleStatus = async (adId) => {
+		setPageError('');
+		setPageMessage('');
+		try {
+			const response = await axios.patch(
+				`${API_BASE_URL}/api/advertisement/advertisements/${adId}/toggle-status`,
+				{},
+				{ headers: authHeaders }
+			);
+			if (response.data.success) {
+				const updatedAd = response.data.data;
+				setMyAds((previous) =>
+					previous.map((ad) => ((ad._id || ad.id || ad.addId) === adId ? { ...ad, isActive: updatedAd.isActive } : ad))
+				);
+				setPageMessage(response.data.message || 'Listing publish status toggled successfully.');
+			}
+		} catch (error) {
+			setPageError(error.response?.data?.message || 'Unable to update publish status.');
+		}
 	};
 
 	if (!currentUser) {
@@ -600,7 +625,14 @@ const UserDashboard = () => {
 						{myAds.map((ad) => {
 							const adId = ad._id || ad.id || ad.addId;
 
-							return <AdvertisementCard key={adId} ad={ad} onDelete={handleDeleteAd} />;
+							return (
+								<AdvertisementCard
+									key={adId}
+									ad={ad}
+									onDelete={handleDeleteAd}
+									onToggleStatus={handleToggleStatus}
+								/>
+							);
 						})}
 					</div>
 				) : (

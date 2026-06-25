@@ -76,6 +76,18 @@ const advertSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    province: {
+        type: String,
+        required: true
+    },
+    district: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
     }
 
 })

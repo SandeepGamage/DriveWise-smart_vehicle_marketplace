@@ -10,6 +10,7 @@ import {
     deleteAdvertisement,
     toggleAdvertisementStatus,
 } from '../controllers/adveController.js';
+import { verifyToken } from '../middleware/authMiddleware.js';
 import axios from 'axios'; // Import axios here to use in the inline route controller
 
 const advertRoutes = express.Router();
@@ -47,13 +48,13 @@ advertRoutes.post('/predict-price', async (req, res) => {
 });
 
 // Existing routes below...
-advertRoutes.post('/advertisements', createAdvertisement);
+advertRoutes.post('/advertisements', verifyToken, createAdvertisement);
 advertRoutes.get('/advertisements', getAllAdvertisements);
 advertRoutes.get('/advertisements/active', getActiveAdvertisements);
 advertRoutes.get('/advertisements/:id', getAdvertisementById);
 advertRoutes.get('/advertisements/user/:userId', getAdvertisementsByUser);
-advertRoutes.put('/advertisements/:id', updateAdvertisement);
-advertRoutes.patch('/advertisements/:id/toggle-status', toggleAdvertisementStatus);
-advertRoutes.delete('/advertisements/:id', deleteAdvertisement);
+advertRoutes.put('/advertisements/:id', verifyToken, updateAdvertisement);
+advertRoutes.patch('/advertisements/:id/toggle-status', verifyToken, toggleAdvertisementStatus);
+advertRoutes.delete('/advertisements/:id', verifyToken, deleteAdvertisement);
 
 export default advertRoutes;
