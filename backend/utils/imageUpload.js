@@ -1,9 +1,17 @@
 import "dotenv/config";
 import {createClient} from "@supabase/supabase-js";
+import ws from "ws";
 
 const KEY = process.env.SUPABASE_ANON_KEY;
 const URL = process.env.SUPABASE_URL;
-const supabase = createClient(URL, KEY);
+const supabase = createClient(URL, KEY, {
+    auth: {
+        persistSession: false
+    },
+    realtime: {
+        transport: ws
+    }
+});
 
 export default async function uploadImage(file) {
     try {

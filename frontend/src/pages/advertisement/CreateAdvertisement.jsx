@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import brandModelMap from '../../utils/brand_model_map.json';
+import sriLankaLocations from '../../utils/sri_lanka_locations.json';
 import mediaUpload from '../../utils/mediaUpload.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 
@@ -23,7 +24,10 @@ const CreateAdvertisement = () => {
         transmission: 'Manual',
         color: '',
         images: ['https://placehold.co/600x400?text=Vehicle+Image'],
-        userId: storedUserId
+        userId: storedUserId,
+        province: '',
+        district: '',
+        city: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -141,8 +145,13 @@ const CreateAdvertisement = () => {
             return;
         }
 
+        const token = localStorage.getItem('drivewise_token');
+        const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+
         try {
-            const res = await axios.post(`${API_BASE_URL}/api/advertisement/advertisements`, finalizedPayload);
+            const res = await axios.post(`${API_BASE_URL}/api/advertisement/advertisements`, finalizedPayload, {
+                headers: authHeaders
+            });
             if (res.data.success) {
                 goeyToast.success('Advertisement Listed', {
                     description: 'Ad post created live across your vehicle marketplace!'
@@ -150,7 +159,8 @@ const CreateAdvertisement = () => {
                 setFormData({
                     title: '', description: '', vehicleName: '', model: '', price: '',
                     ManufactureYear: '', mileage: '', fuelType: 'Petrol', transmission: 'Manual',
-                    color: '', images: ['https://placehold.co/600x400?text=Vehicle+Image'], userId: storedUserId
+                    color: '', images: ['https://placehold.co/600x400?text=Vehicle+Image'], userId: storedUserId,
+                    province: '', district: '', city: ''
                 });
                 setAutoPredictedPrice(null);
             }
@@ -251,6 +261,80 @@ const CreateAdvertisement = () => {
                                         </div>
                                     );
                                 })}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="border-t border-sand-200 dark:border-slate-800 pt-6">
+                        <h3 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Location Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Province *</label>
+                                <select
+                                    required
+                                    name="province"
+                                    value={formData.province}
+                                    onChange={(e) => {
+                                        const selectedProvince = e.target.value;
+                                        const districts = selectedProvince ? Object.keys(sriLankaLocations[selectedProvince]) : [];
+                                        const firstDistrict = districts.length > 0 ? districts[0] : '';
+                                        const cities = (selectedProvince && firstDistrict) ? sriLankaLocations[selectedProvince][firstDistrict] : [];
+                                        const firstCity = cities.length > 0 ? cities[0] : '';
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            province: selectedProvince,
+                                            district: firstDistrict,
+                                            city: firstCity
+                                        }));
+                                    }}
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent cursor-pointer"
+                                >
+                                    <option value="" className="dark:bg-slate-900 dark:text-slate-300">Select Province</option>
+                                    {Object.keys(sriLankaLocations).map((province) => (
+                                        <option key={province} value={province} className="dark:bg-slate-900 dark:text-slate-300">{province}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">District *</label>
+                                <select
+                                    required
+                                    name="district"
+                                    value={formData.district}
+                                    onChange={(e) => {
+                                        const selectedDistrict = e.target.value;
+                                        const cities = (formData.province && selectedDistrict) ? sriLankaLocations[formData.province][selectedDistrict] : [];
+                                        const firstCity = cities.length > 0 ? cities[0] : '';
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            district: selectedDistrict,
+                                            city: firstCity
+                                        }));
+                                    }}
+                                    disabled={!formData.province}
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent disabled:opacity-50 cursor-pointer"
+                                >
+                                    <option value="" className="dark:bg-slate-900 dark:text-slate-300">Select District</option>
+                                    {formData.province && Object.keys(sriLankaLocations[formData.province]).map((district) => (
+                                        <option key={district} value={district} className="dark:bg-slate-900 dark:text-slate-300">{district}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">City / Location *</label>
+                                <select
+                                    required
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    disabled={!formData.district}
+                                    className="w-full bg-sand-100 dark:bg-slate-950/40 border border-sand-200/50 dark:border-slate-800 rounded-full px-4.5 py-2.5 text-xs text-warm-dark dark:text-slate-200 focus:outline-none focus:border-warm-accent disabled:opacity-50 cursor-pointer"
+                                >
+                                    <option value="" className="dark:bg-slate-900 dark:text-slate-300">Select City</option>
+                                    {formData.province && formData.district && sriLankaLocations[formData.province][formData.district].map((city) => (
+                                        <option key={city} value={city} className="dark:bg-slate-900 dark:text-slate-300">{city}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
                     </div>

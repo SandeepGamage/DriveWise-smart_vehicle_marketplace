@@ -31,6 +31,7 @@ const Dashboard = () => {
     const [selectedBrand, setSelectedBrand] = useState('');
     const [selectedFuel, setSelectedFuel] = useState('');
     const [selectedTransmission, setSelectedTransmission] = useState('');
+    const [selectedDistrict, setSelectedDistrict] = useState('');
     const [sortBy, setSortBy] = useState('newest');
 
     // Stats variables
@@ -57,7 +58,7 @@ const Dashboard = () => {
         setLoading(true);
         setErrorMsg('');
         try {
-            const res = await axios.get(`http://localhost:3000/api/advertisement/advertisements`, {
+            const res = await axios.get(`http://localhost:3000/api/advertisement/advertisements/active`, {
                 params: {
                     page: page,
                     limit: 100 // Fetch a larger batch to support robust client-side searching & stats
@@ -110,13 +111,19 @@ const Dashboard = () => {
     const filteredAds = ads.filter(ad => {
         const titleMatch = ad.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             ad.vehicleName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            ad.model?.toLowerCase().includes(searchQuery.toLowerCase());
+            ad.model?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            ad.province?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            ad.district?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            ad.city?.toLowerCase().includes(searchQuery.toLowerCase());
         const brandMatch = selectedBrand ? ad.vehicleName === selectedBrand : true;
         const fuelMatch = selectedFuel ? ad.fuelType?.toLowerCase() === selectedFuel.toLowerCase() : true;
         const transmissionMatch = selectedTransmission ? ad.transmission === selectedTransmission : true;
+        const districtMatch = selectedDistrict ? ad.district === selectedDistrict : true;
 
-        return titleMatch && brandMatch && fuelMatch && transmissionMatch;
+        return titleMatch && brandMatch && fuelMatch && transmissionMatch && districtMatch;
     });
+
+    const uniqueDistricts = [...new Set(ads.map(ad => ad.district).filter(Boolean))].sort();
 
     const sortedAds = [...filteredAds].sort((a, b) => {
         if (sortBy === 'price-asc') return a.price - b.price;
@@ -146,6 +153,7 @@ const Dashboard = () => {
         setSelectedBrand('');
         setSelectedFuel('');
         setSelectedTransmission('');
+        setSelectedDistrict('');
         setSortBy('newest');
         setPagination(prev => ({ ...prev, page: 1 }));
     };
@@ -236,9 +244,9 @@ const Dashboard = () => {
                         {/* Split Divider line */}
                         <div className="hidden sm:block w-px h-6 bg-sand-300 dark:bg-slate-700"></div>
 
-                        {/* Location / Brand Quick select */}
+                        {/* Brand Quick select */}
                         <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-                            <span className="text-slate-450 text-xs">📍</span>
+                            <span className="text-slate-450 text-xs">🏷️</span>
                             <select
                                 value={selectedBrand}
                                 onChange={(e) => {
@@ -295,6 +303,20 @@ const Dashboard = () => {
                     </select>
 
                     <select
+                        value={selectedDistrict}
+                        onChange={(e) => {
+                            setSelectedDistrict(e.target.value);
+                            setPagination(prev => ({ ...prev, page: 1 }));
+                        }}
+                        className="bg-white dark:bg-slate-800 border border-sand-300/60 dark:border-slate-700/60 rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-wider text-warm-dark dark:text-slate-300 hover:bg-sand-100 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
+                    >
+                        <option value="" className="dark:bg-slate-800 dark:text-slate-300">All Districts</option>
+                        {uniqueDistricts.map(dist => (
+                            <option key={dist} value={dist} className="dark:bg-slate-800 dark:text-slate-300">{dist}</option>
+                        ))}
+                    </select>
+
+                    <select
                         value={sortBy}
                         onChange={(e) => {
                             setSortBy(e.target.value);
@@ -310,7 +332,7 @@ const Dashboard = () => {
                     </select>
 
                     {/* Active tags visual list */}
-                    {(searchQuery || selectedBrand || selectedFuel || selectedTransmission || sortBy !== 'newest') && (
+                    {(searchQuery || selectedBrand || selectedFuel || selectedTransmission || selectedDistrict || sortBy !== 'newest') && (
                         <button
                             onClick={handleClearFilters}
                             className="bg-rose-550/10 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-455 rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-wider hover:bg-rose-100/50 dark:hover:bg-rose-950/20 transition-colors cursor-pointer shadow-sm"

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCar, FaUserPlus, FaExclamationTriangle, FaCheckCircle, FaImage } from 'react-icons/fa';
+import { goeyToast } from 'goey-toast';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -32,24 +33,32 @@ export function Register() {
         const { userName, email, password, phoneNum } = formData;
 
         if (!userName.trim() || !email.trim() || !password.trim() || !phoneNum.trim()) {
-            setError('All required fields must be provided.');
+            const msg = 'All required fields must be provided.';
+            goeyToast.error('Validation Warning', { description: msg });
+            setError(msg);
             return false;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email.trim())) {
-            setError('Invalid email format.');
+            const msg = 'Invalid email format.';
+            goeyToast.error('Validation Warning', { description: msg });
+            setError(msg);
             return false;
         }
 
         if (password.length < 6) {
-            setError('Password must be at least 6 characters long.');
+            const msg = 'Password must be at least 6 characters long.';
+            goeyToast.error('Validation Warning', { description: msg });
+            setError(msg);
             return false;
         }
 
         const phoneRegex = /^\d{10}$/;
         if (!phoneRegex.test(phoneNum.trim())) {
-            setError('Invalid phone number format. Use exactly 10 digits.');
+            const msg = 'Invalid phone number format. Use exactly 10 digits.';
+            goeyToast.error('Validation Warning', { description: msg });
+            setError(msg);
             return false;
         }
 
@@ -73,17 +82,27 @@ export function Register() {
             payload.append('email', formData.email.trim());
             payload.append('password', formData.password);
             payload.append('phoneNum', formData.phoneNum.trim());
-            payload.append('profilePic', profilePic);
+            if (profilePic) {
+                payload.append('profilePic', profilePic);
+            }
 
             const response = await axios.post(`${API_BASE_URL}/api/user/register`, payload);
-            setSuccessMessage(response.data?.message || 'Registered successfully! Redirecting to login...');
+            const successMsg = response.data?.message || 'Registered successfully!';
+            goeyToast.success('Registered Successfully', {
+                description: successMsg
+            });
+            setSuccessMessage(successMsg + ' Redirecting to login...');
 
             setTimeout(() => {
                 navigate('/login');
             }, 700);
         } catch (requestError) {
             const serverMessage = requestError?.response?.data?.message;
-            setError(serverMessage || 'Unable to register. Please try again.');
+            const errMsg = serverMessage || 'Unable to register. Please try again.';
+            goeyToast.error('Registration Failed', {
+                description: errMsg
+            });
+            setError(errMsg);
         } finally {
             setIsSubmitting(false);
         }
@@ -207,19 +226,6 @@ export function Register() {
                         </div>
                     </div>
 
-                    {error && (
-                        <div className="flex items-start gap-2.5 rounded-2xl border border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-950/20 px-4 py-3 text-xs font-semibold text-rose-700 dark:text-rose-300 shadow-inner">
-                            <FaExclamationTriangle className="mt-0.5 shrink-0 text-rose-500" />
-                            <p>{error}</p>
-                        </div>
-                    )}
-
-                    {successMessage && (
-                        <div className="flex items-start gap-2.5 rounded-2xl border border-emerald-250 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-950/20 px-4 py-3 text-xs font-semibold text-emerald-700 dark:text-emerald-300 shadow-inner">
-                            <FaCheckCircle className="mt-0.5 shrink-0 text-emerald-600" />
-                            <p>{successMessage}</p>
-                        </div>
-                    )}
 
                     <button
                         type="submit"
