@@ -364,7 +364,8 @@ export const deleteAdvertisement = async (req, res) => {
         }
 
         const tokenUserId = req.user.UID || String(req.user._id);
-        if (advertisement.userId !== tokenUserId) {
+        const isUserAdmin = req.user.isAdmin === true;
+        if (advertisement.userId !== tokenUserId && !isUserAdmin) {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized: You can only delete your own advertisements'
@@ -412,7 +413,8 @@ export const toggleAdvertisementStatus = async (req, res) => {
         }
 
         const tokenUserId = req.user.UID || String(req.user._id);
-        if (advertisement.userId !== tokenUserId) {
+        const isUserAdmin = req.user.isAdmin === true;
+        if (advertisement.userId !== tokenUserId && !isUserAdmin) {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized: You can only modify your own advertisements'

@@ -48,7 +48,7 @@ export async function getUserByID(req, res) {
 export async function getAllUsers(req, res) {
     try {
 
-        if (req.user.role !== "admin") {
+        if (req.user.role !== "admin" && !req.user.isAdmin) {
             return res.status(400).json({
                 message: "Login as an admin for view all users!"
             })
@@ -199,7 +199,7 @@ export async function suspendUser(req, res) {
     try {
         const userID = req.params.id;
 
-        if (req.user.role !== "admin") {
+        if (req.user.role !== "admin" && !req.user.isAdmin) {
             return res.status(400).json({
                 message: "Login as admin to complete the process."
             })
@@ -370,6 +370,44 @@ export async function getCurrentUser(req, res) {
         });
     } catch (err) {
         return res.status(500).json({
+            message: "Internal server error",
+            error: err.message
+        });
+    }
+}
+
+export async function toggleUserStatus(req, res) {
+    try {
+        if (req.user.role !== "admin" && !req.user.isAdmin) {
+            return res.status(403).json({ message: "Forbidden: Admin access required" });
+        }
+        const userId = req.params.id;
+        
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        const queryId = mongoose.Types.ObjectId.isValid(userId) ? userId : null;
+        const foundUser = await User.findOne({
+            $or: [
+                { UID: userId },
+                ...(queryId ? [{ _id: queryId }] : [])
+            ]
+        });
+
+        if (!foundUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        foundUser.isActive = !foundUser.isActive;
+        const savedUser = await foundUser.save();
+
+        res.status(200).json({
+            message: `User ${savedUser.isActive ? "activated" : "deactivated"} successfully`,
+            user: safeUser(savedUser)
+        });
+    } catch (err) {
+        res.status(500).json({
             message: "Internal server error",
             error: err.message
         });

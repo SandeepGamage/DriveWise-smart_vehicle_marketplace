@@ -67,6 +67,20 @@ const Navbar = () => {
                         >
                             <span>AI Valuation</span>
                         </NavLink>
+
+                        {user?.isAdmin && (
+                            <NavLink
+                                to="/admin-dashboard"
+                                className={({ isActive }) =>
+                                    `px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5 ${isActive
+                                        ? 'bg-rose-600 dark:bg-rose-500 text-white dark:text-slate-900 shadow-sm'
+                                        : 'text-rose-600/90 dark:text-rose-455/90 hover:text-rose-600 dark:hover:text-rose-350 hover:bg-rose-100/30 dark:hover:bg-rose-950/20'
+                                    }`
+                                }
+                            >
+                                <span>Admin Panel</span>
+                            </NavLink>
+                        )}
                     </nav>
 
                     {/* Right: Dynamic User State Profile & Notifications */}
@@ -157,6 +171,21 @@ const Navbar = () => {
                         >
                             AI Valuation
                         </NavLink>
+
+                        {user?.isAdmin && (
+                            <NavLink
+                                to="/admin-dashboard"
+                                onClick={() => setIsOpen(false)}
+                                className={({ isActive }) =>
+                                    `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
+                                        ? 'bg-rose-600 text-white shadow-sm'
+                                        : 'text-rose-600 hover:bg-rose-50/30'
+                                    }`
+                                }
+                            >
+                                Admin Panel
+                            </NavLink>
+                        )}
                     </div>
                 )}
             </div>
