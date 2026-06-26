@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-warm-bg: #F8FAFC;
+  --color-warm-card: #FFFFFF;
+  --color-warm-dark: #0B0F19;
+  --color-warm-dark-card: #161E2E;
+  --color-warm-accent: #3B82F6;
+  --color-warm-accent-hover: #2563EB;
+
+  --color-sand-50: #FCFDFE;
+  --color-sand-100: #F1F5F9;
+  --color-sand-200: #E2E8F0;
+  --color-sand-300: #CBD5E1;
+  --color-sand-400: #94A3B8;
+  --color-sand-500: #64748B;
+  --color-sand-600: #475569;
+  --color-sand-700: #334155;
+  --color-sand-800: #1E293B;
+  --color-sand-900: #0F172A;
+}
+
+html,
+body {
+  background-color: var(--color-warm-bg);
+  color: var(--color-warm-dark);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark,
+html.dark body {
+  background-color: var(--color-warm-dark);
+  color: #f8fafc;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll linear infinite;
+}
+
+.animate-scroll.paused {
+  animation-play-state: paused;
+}

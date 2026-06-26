@@ -1,0 +1,209 @@
+{
+  "Southern Province": {
+    "Matara": [
+      "Kamburupitiya",
+      "Matara City",
+      "Weligama",
+      "Akuressa",
+      "Deniyaya",
+      "Dikwella",
+      "Gandara",
+      "Kekanadura",
+      "Hakmana",
+      "Thihagoda"
+    ],
+    "Galle": [
+      "Galle City",
+      "Hikkaduwa",
+      "Ambalangoda",
+      "Karapitiya",
+      "Elpitiya",
+      "Baddegama",
+      "Bentota",
+      "Unawatuna",
+      "Ahangama"
+    ],
+    "Hambantota": [
+      "Hambantota City",
+      "Tangalle",
+      "Beliatta",
+      "Ambalantota",
+      "Tissamaharama",
+      "Middeniya"
+    ]
+  },
+  "Western Province": {
+    "Colombo": [
+      "Colombo 1-15",
+      "Dehiwala",
+      "Mount Lavinia",
+      "Moratuwa",
+      "Nugegoda",
+      "Maharagama",
+      "Kottawa",
+      "Malabe",
+      "Battaramulla",
+      "Hanwella",
+      "Homagama",
+      "Kaduwela",
+      "Kolonnawa",
+      "Avissawella",
+      "Piliyandala",
+      "Rajagiriya",
+      "Talawatugoda",
+      "Wellampitiya"
+    ],
+    "Gampaha": [
+      "Gampaha City",
+      "Negombo",
+      "Wattala",
+      "Kiribathgoda",
+      "Ja-Ela",
+      "Kadawatha",
+      "Kelaniya",
+      "Minuwangoda",
+      "Mirigama",
+      "Ragama",
+      "Veyangoda",
+      "Nittambuwa"
+    ],
+    "Kalutara": [
+      "Kalutara City",
+      "Panadura",
+      "Horana",
+      "Bandaragama",
+      "Matugama",
+      "Aluthgama",
+      "Beruwala",
+      "Ingiriya",
+      "Wadduwa"
+    ]
+  },
+  "Central Province": {
+    "Kandy": [
+      "Kandy City",
+      "Peradeniya",
+      "Gampola",
+      "Nawalapitiya",
+      "Kundasale",
+      "Pilimathalawa",
+      "Katugastota",
+      "Digana",
+      "Gelioya"
+    ],
+    "Matale": [
+      "Matale City",
+      "Dambulla",
+      "Sigiriya",
+      "Ukuwela",
+      "Rattota"
+    ],
+    "Nuwara Eliya": [
+      "Nuwara Eliya City",
+      "Hatton",
+      "Ginigathena",
+      "Talawakele"
+    ]
+  },
+  "Sabaragamuwa Province": {
+    "Ratnapura": [
+      "Ratnapura City",
+      "Balangoda",
+      "Embilipitiya",
+      "Pelmadulla",
+      "Kuruwita",
+      "Eheliyagoda"
+    ],
+    "Kegalle": [
+      "Kegalle City",
+      "Mawanella",
+      "Rambukkana",
+      "Warakapola",
+      "Ruwanwella",
+      "Dehiowita"
+    ]
+  },
+  "Eastern Province": {
+    "Trincomalee": [
+      "Trincomalee City",
+      "Kinniya",
+      "Mutur"
+    ],
+    "Batticaloa": [
+      "Batticaloa City",
+      "Kattankudy",
+      "Kalkudah"
+    ],
+    "Ampara": [
+      "Ampara City",
+      "Kalmunai",
+      "Sainthamaruthu"
+    ]
+  },
+  "Northern Province": {
+    "Jaffna": [
+      "Jaffna City",
+      "Point Pedro",
+      "Chavakachcheri",
+      "Nallur",
+      "Kopay"
+    ],
+    "Kilinochchi": [
+      "Kilinochchi City"
+    ],
+    "Mannar": [
+      "Mannar City"
+    ],
+    "Vavuniya": [
+      "Vavuniya City"
+    ],
+    "Mullaitivu": [
+      "Mullaitivu City"
+    ]
+  },
+  "North Western Province": {
+    "Kurunegala": [
+      "Kurunegala City",
+      "Kuliyapitiya",
+      "Narammala",
+      "Wariyapola",
+      "Pannala",
+      "Polgahawela",
+      "Mawathagama"
+    ],
+    "Puttalam": [
+      "Puttalam City",
+      "Chilaw",
+      "Wennappuwa",
+      "Marawila",
+      "Dankotuwa"
+    ]
+  },
+  "North Central Province": {
+    "Anuradhapura": [
+      "Anuradhapura City",
+      "Mihintale",
+      "Kekirawa",
+      "Talawa"
+    ],
+    "Polonnaruwa": [
+      "Polonnaruwa City",
+      "Kaduruwela"
+    ]
+  },
+  "Uva Province": {
+    "Badulla": [
+      "Badulla City",
+      "Bandarawela",
+      "Haputale",
+      "Welimada",
+      "Ella",
+      "Diyatalawa"
+    ],
+    "Moneragala": [
+      "Moneragala City",
+      "Wellawaya",
+      "Bibile"
+    ]
+  }
+}

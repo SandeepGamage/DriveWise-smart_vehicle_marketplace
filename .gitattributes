@@ -1,0 +1,1 @@
+prediction-service/src/models/*.pkl filter=lfs diff=lfs merge=lfs -text
