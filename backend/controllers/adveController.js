@@ -1,5 +1,7 @@
 import axios from 'axios';
+import mongoose from 'mongoose';
 import Advert from '../models/advertModel.js';
+import User from '../models/user.js';
 
 const PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL ||  'http://127.0.0.1:5000/api/predict';
 
@@ -216,10 +218,32 @@ export const getAdvertisementById = async (req, res) => {
             });
         }
 
+        let sellerPhone = '';
+        let sellerName = '';
+        try {
+            const queryId = mongoose.Types.ObjectId.isValid(advertisement.userId) ? advertisement.userId : null;
+            const user = await User.findOne({
+                $or: [
+                    { UID: advertisement.userId },
+                    ...(queryId ? [{ _id: queryId }] : [])
+                ]
+            });
+            if (user) {
+                sellerPhone = user.phoneNum || '';
+                sellerName = user.userName || '';
+            }
+        } catch (userErr) {
+            console.error("Error fetching seller details:", userErr.message);
+        }
+
+        const adData = advertisement.toObject();
+        adData.sellerPhone = sellerPhone;
+        adData.sellerName = sellerName;
+
         res.status(200).json({
             success: true,
             message: 'Advertisement retrieved successfully',
-            data: advertisement
+            data: adData
         });
     } catch (error) {
         res.status(500).json({
@@ -229,6 +253,7 @@ export const getAdvertisementById = async (req, res) => {
         });
     }
 };
+
 
 
 export const getAdvertisementsByUser = async (req, res) => {
