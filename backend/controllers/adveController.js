@@ -390,7 +390,7 @@ export const deleteAdvertisement = async (req, res) => {
 
         const tokenUserId = req.user.UID || String(req.user._id);
         const isUserAdmin = req.user.isAdmin === true;
-        if (advertisement.userId !== tokenUserId && !isUserAdmin) {
+        if (!isUserAdmin) {
             return res.status(403).json({
                 success: false,
                 message: 'Unauthorized: You can only delete your own advertisements'
@@ -407,7 +407,7 @@ export const deleteAdvertisement = async (req, res) => {
         }
 
    
-        await Booking.deleteMany({ advertisementId: deletedAdvert.addId });
+        // await Booking.deleteMany({ advertisementId: deletedAdvert.addId });
 
         res.status(200).json({
             success: true,
@@ -428,41 +428,57 @@ export const toggleAdvertisementStatus = async (req, res) => {
     try {
         const { id } = req.params;
 
+        // Find advertisement
         const advertisement = await Advert.findById(id);
 
         if (!advertisement) {
             return res.status(404).json({
                 success: false,
-                message: 'Advertisement not found'
+                message: "Advertisement not found"
             });
         }
 
+        // Get logged-in user
         const tokenUserId = req.user.UID || String(req.user._id);
         const isUserAdmin = req.user.isAdmin === true;
-        if (advertisement.userId !== tokenUserId && !isUserAdmin) {
+
+        // Authorization check
+        if (advertisement.userId.toString() !== tokenUserId && !isUserAdmin) {
             return res.status(403).json({
                 success: false,
-                message: 'Unauthorized: You can only modify your own advertisements'
+                message: "Unauthorized: You can only modify your own advertisements"
             });
         }
 
-        advertisement.isActive = !advertisement.isActive;
-        advertisement.updatedAt = new Date();
+        // Toggle active status
+        const updatedAdvert = await Advert.findByIdAndUpdate(
+            id,
+            {
+                $set: {
+                    isActive: !advertisement.isActive
+                }
+            },
+            {
+                new: true
+            }
+        );
 
-        const updatedAdvert = await advertisement.save();
-
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: `Advertisement ${updatedAdvert.isActive ? 'activated' : 'deactivated'} successfully`,
+            message: `Advertisement ${
+                updatedAdvert.isActive ? "activated" : "deactivated"
+            } successfully`,
             data: updatedAdvert
         });
+
     } catch (error) {
-        res.status(500).json({
+        console.error("Toggle Advertisement Error:", error);
+
+        return res.status(500).json({
             success: false,
-            message: 'Error toggling advertisement status',
+            message: "Error toggling advertisement status",
             error: error.message
         });
     }
 };
-
 
