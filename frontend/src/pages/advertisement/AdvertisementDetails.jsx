@@ -14,7 +14,8 @@ import {
     FaBookmark,
     FaRegBookmark,
     FaShareAlt,
-    FaEnvelope
+    FaEnvelope,
+    FaWhatsapp
 } from 'react-icons/fa';
 
 const AdvertisementDetails = () => {
@@ -27,9 +28,18 @@ const AdvertisementDetails = () => {
     const [activeImgIdx, setActiveImgIdx] = useState(0);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-    // Booking Form state
-    const [bookingForm, setBookingForm] = useState({ name: '', phone: '', date: '', time: '' });
-    const [bookingSuccess, setBookingSuccess] = useState('');
+    // WhatsApp link generator utility
+    const getWhatsAppLink = (phoneNum) => {
+        if (!phoneNum) return '';
+        let cleaned = phoneNum.replace(/\D/g, '');
+        if (cleaned.startsWith('0') && cleaned.length === 10) {
+            cleaned = '94' + cleaned.substring(1);
+        }
+        if (cleaned.length === 9) {
+            cleaned = '94' + cleaned;
+        }
+        return `https://wa.me/${cleaned}`;
+    };
 
     useEffect(() => {
         const fetchAdDetails = async () => {
@@ -53,11 +63,6 @@ const AdvertisementDetails = () => {
         fetchAdDetails();
     }, [id]);
 
-    const handleBookingSubmit = (e) => {
-        e.preventDefault();
-        setBookingSuccess(`📅 Booking confirmed! Inspection scheduled for ${bookingForm.date} at ${bookingForm.time}. A DriveWise advisor will reach out to you at ${bookingForm.phone} shortly.`);
-        setBookingForm({ name: '', phone: '', date: '', time: '' });
-    };
 
     if (loading) {
         return (
@@ -340,84 +345,46 @@ const AdvertisementDetails = () => {
                         )}
                     </div>
 
-                    {/* Booking Form Card */}
+                    {/* Contact Seller Card */}
                     <div className="bg-warm-dark text-white rounded-[2.5rem] p-8 shadow-xl space-y-6 border border-white/5">
                         <div className="flex items-center gap-2.5 pb-2 border-b border-white/10">
-                            <FaShieldAlt className="text-warm-accent text-sm" />
+                            <FaUser className="text-warm-accent text-sm" />
                             <h3 className="text-xs font-black uppercase tracking-wider">
-                                Schedule Inspection
+                                Contact Seller
                             </h3>
                         </div>
 
-                        {bookingSuccess ? (
-                            <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-450 text-xs font-black rounded-2xl animate-fade-in leading-relaxed">
-                                {bookingSuccess}
+                        <div className="space-y-4">
+                            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col space-y-2">
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Seller Name</span>
+                                <span className="text-sm font-bold text-white">{ad.sellerName || 'Private Seller'}</span>
                             </div>
-                        ) : (
-                            <form onSubmit={handleBookingSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-[9px] font-black uppercase tracking-wider text-slate-450 mb-1.5">Your Name</label>
-                                    <input
-                                        required
-                                        type="text"
-                                        value={bookingForm.name}
-                                        onChange={(e) => setBookingForm(prev => ({ ...prev, name: e.target.value }))}
-                                        className="w-full bg-white/5 border border-white/10 rounded-full px-4.5 py-2.5 text-xs text-white focus:outline-none focus:border-warm-accent"
-                                        placeholder="Enter your name"
-                                    />
-                                </div>
 
-                                <div>
-                                    <label className="block text-[9px] font-black uppercase tracking-wider text-slate-450 mb-1.5">Phone Number</label>
-                                    <input
-                                        required
-                                        type="tel"
-                                        value={bookingForm.phone}
-                                        onChange={(e) => setBookingForm(prev => ({ ...prev, phone: e.target.value }))}
-                                        className="w-full bg-white/5 border border-white/10 rounded-full px-4.5 py-2.5 text-xs text-white focus:outline-none focus:border-warm-accent"
-                                        placeholder="e.g. +94 77 123 4567"
-                                    />
-                                </div>
+                            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col space-y-2">
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Mobile Number</span>
+                                <span className="text-lg font-mono font-black text-warm-accent">{ad.sellerPhone || 'Not Provided'}</span>
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-3.5">
-                                    <div>
-                                        <label className="block text-[9px] font-black uppercase tracking-wider text-slate-450 mb-1.5">Target Date</label>
-                                        <input
-                                            required
-                                            type="date"
-                                            value={bookingForm.date}
-                                            onChange={(e) => setBookingForm(prev => ({ ...prev, date: e.target.value }))}
-                                            className="w-full bg-white/5 border border-white/10 rounded-full px-4.5 py-2.5 text-xs text-slate-300 focus:outline-none focus:border-warm-accent cursor-pointer"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-[9px] font-black uppercase tracking-wider text-slate-450 mb-1.5">Target Time</label>
-                                        <input
-                                            required
-                                            type="time"
-                                            value={bookingForm.time}
-                                            onChange={(e) => setBookingForm(prev => ({ ...prev, time: e.target.value }))}
-                                            className="w-full bg-white/5 border border-white/10 rounded-full px-4.5 py-2.5 text-xs text-slate-300 focus:outline-none focus:border-warm-accent cursor-pointer"
-                                        />
-                                    </div>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-warm-accent hover:bg-warm-accent-hover text-warm-dark font-black py-4 px-6 rounded-full shadow-md transition-all text-[10px] uppercase tracking-widest cursor-pointer mt-2"
+                            {ad.sellerPhone && (
+                                <a
+                                    href={getWhatsAppLink(ad.sellerPhone)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black py-4 px-6 rounded-full shadow-md transition-all text-[10px] uppercase tracking-widest cursor-pointer mt-2 flex items-center justify-center gap-2.5"
                                 >
-                                    Book Now
-                                </button>
-                            </form>
-                        )}
+                                    <FaWhatsapp className="text-sm" />
+                                    <span>Contact via WhatsApp</span>
+                                </a>
+                            )}
+                        </div>
 
                         <div className="flex gap-2 pt-2 border-t border-white/10">
                             <a
-                                href={`mailto:dealer@drivewise.com?subject=Inquiry: ${ad.ManufactureYear} ${ad.vehicleName} ${ad.model}`}
+                                href={`mailto:support@drivewise.com?subject=Inquiry: ${ad.ManufactureYear} ${ad.vehicleName} ${ad.model}`}
                                 className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white font-black py-3 rounded-full text-[10px] transition-colors flex items-center justify-center gap-2 shadow-sm uppercase tracking-wider"
                             >
                                 <FaEnvelope className="text-[10px]" />
-                                <span>Message Dealer</span>
+                                <span>Email Support</span>
                             </a>
                         </div>
                     </div>
