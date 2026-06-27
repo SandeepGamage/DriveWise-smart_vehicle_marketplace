@@ -16,6 +16,7 @@ import {
     FaRoad,
     FaCog
 } from 'react-icons/fa';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Dashboard = () => {
     const { isDark } = useTheme();
@@ -58,7 +59,7 @@ const Dashboard = () => {
         setLoading(true);
         setErrorMsg('');
         try {
-            const res = await axios.get(`http://localhost:3000/api/advertisement/advertisements/active`, {
+            const res = await axios.get(`${API_BASE_URL}/api/advertisement/advertisements/active`, {
                 params: {
                     page: page,
                     limit: 100 // Fetch a larger batch to support robust client-side searching & stats
@@ -169,7 +170,7 @@ const Dashboard = () => {
             onConfirm: async () => {
                 setConfirmLoading(true);
                 try {
-                    const res = await axios.delete(`http://localhost:3000/api/advertisement/advertisements/${id}`);
+                    const res = await axios.delete(`${API_BASE_URL}/api/advertisement/advertisements/${id}`);
                     if (res.data.success) {
                         setAds(prev => prev.filter(ad => (ad._id || ad.id || ad.addId) !== id));
                         fetchAdvertisements(1);
