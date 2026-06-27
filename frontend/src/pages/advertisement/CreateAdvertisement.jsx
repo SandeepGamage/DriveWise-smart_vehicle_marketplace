@@ -5,7 +5,7 @@ import sriLankaLocations from '../../utils/sri_lanka_locations.json';
 import mediaUpload from '../../utils/mediaUpload.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 import { goeyToast } from 'goey-toast';
 
 const CreateAdvertisement = () => {
