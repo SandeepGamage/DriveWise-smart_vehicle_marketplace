@@ -20,7 +20,10 @@ advertRoutes.post('/predict-price', async (req, res) => {
     try {
         const { vehicleName, model, mileage, ManufactureYear, transmission, powerHp } = req.body;
 
-        const PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL || 'http://127.0.0.1:5000/api/predict';
+        let PREDICTION_SERVICE_URL = process.env.PREDICTION_SERVICE_URL;
+        if (PREDICTION_SERVICE_URL && !PREDICTION_SERVICE_URL.endsWith('/api/predict')) {
+            PREDICTION_SERVICE_URL = PREDICTION_SERVICE_URL.replace(/\/$/, '') + '/api/predict';
+        }
         const EURO_TO_LKR_RATE = 325.0;
 
         const predictionPayload = {

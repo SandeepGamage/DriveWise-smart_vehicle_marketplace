@@ -96,5 +96,16 @@ def predict():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({
+        'status': 'healthy',
+        'service': 'DriveWise Price Prediction Service',
+        'endpoints': {
+            'predict': '/api/predict (POST)'
+        }
+    })
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
