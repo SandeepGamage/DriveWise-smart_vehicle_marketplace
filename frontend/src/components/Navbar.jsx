@@ -31,7 +31,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Center: Centered Pill Segmented Controller */}
-                    <nav className="flex items-center bg-sand-200/80 dark:bg-slate-800/80 border border-sand-300/50 dark:border-slate-700/50 p-1 rounded-full shadow-inner">
+                    <nav className="hidden md:flex items-center bg-sand-200/80 dark:bg-slate-800/80 border border-sand-300/50 dark:border-slate-700/50 p-1 rounded-full shadow-inner">
                         <NavLink
                             to="/dashboard"
                             className={({ isActive }) =>
@@ -113,7 +113,7 @@ const Navbar = () => {
                                 {/* Logout Button */}
                                 <button
                                     onClick={handleLogout}
-                                    className="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-transparent text-warm-dark dark:text-slate-300 border border-sand-300/60 dark:border-slate-700/60 hover:bg-sand-100 dark:hover:bg-slate-800 hover:text-rose-600 dark:hover:text-rose-455 transition-all duration-300 cursor-pointer shadow-sm flex items-center space-x-1"
+                                    className="hidden md:flex px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-wider bg-transparent text-warm-dark dark:text-slate-300 border border-sand-300/60 dark:border-slate-700/60 hover:bg-sand-100 dark:hover:bg-slate-800 hover:text-rose-600 dark:hover:text-rose-455 transition-all duration-300 cursor-pointer shadow-sm items-center space-x-1"
                                     title="Logout"
                                 >
                                     <FaSignOutAlt className="text-[10px]" />
@@ -123,25 +123,34 @@ const Navbar = () => {
                         ) : (
                             <Link
                                 to="/login"
-                                className="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark hover:bg-warm-accent hover:text-warm-dark dark:hover:bg-warm-accent-hover transition-all duration-300 shadow-md flex items-center space-x-1.5"
+                                className="hidden md:flex px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark hover:bg-warm-accent hover:text-warm-dark dark:hover:bg-warm-accent-hover transition-all duration-300 shadow-md items-center space-x-1.5"
                             >
                                 <FaSignInAlt className="text-[10px]" />
                                 <span>Login</span>
                             </Link>
                         )}
+
+                        {/* Mobile Menu Toggle Button */}
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="md:hidden w-9 h-9 rounded-full bg-white dark:bg-warm-dark-card border border-sand-300/60 dark:border-slate-700/60 flex items-center justify-center text-warm-dark dark:text-slate-300 hover:bg-sand-100 dark:hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+                            aria-label="Toggle menu"
+                        >
+                            {isOpen ? <FaTimes className="text-xs" /> : <FaBars className="text-xs" />}
+                        </button>
                     </div>
                 </div>
 
                 {/* Collapsible Slide Down Menu for Mobile */}
                 {isOpen && (
-                    <div className="md:hidden mt-4 pt-4 border-t border-sand-300/40 flex flex-col space-y-2">
+                    <div className="md:hidden pb-4 pt-2 border-t border-sand-300/40 dark:border-slate-800/40 flex flex-col space-y-2">
                         <NavLink
                             to="/dashboard"
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) =>
                                 `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/80 hover:bg-white/30'
+                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                    : 'text-warm-dark/80 dark:text-slate-300 hover:bg-sand-200/50 dark:hover:bg-slate-800/50'
                                 }`
                             }
                         >
@@ -152,8 +161,8 @@ const Navbar = () => {
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) =>
                                 `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/80 hover:bg-white/30'
+                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                    : 'text-warm-dark/80 dark:text-slate-300 hover:bg-sand-200/50 dark:hover:bg-slate-800/50'
                                 }`
                             }
                         >
@@ -164,8 +173,8 @@ const Navbar = () => {
                             onClick={() => setIsOpen(false)}
                             className={({ isActive }) =>
                                 `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/80 hover:bg-white/30'
+                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                    : 'text-warm-dark/80 dark:text-slate-300 hover:bg-sand-200/50 dark:hover:bg-slate-800/50'
                                 }`
                             }
                         >
@@ -177,14 +186,68 @@ const Navbar = () => {
                                 to="/admin-dashboard"
                                 onClick={() => setIsOpen(false)}
                                 className={({ isActive }) =>
-                                    `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
-                                        ? 'bg-rose-600 text-white shadow-sm'
-                                        : 'text-rose-600 hover:bg-rose-50/30'
+                                    `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-205 flex items-center justify-center ${isActive
+                                        ? 'bg-rose-600 dark:bg-rose-500 text-white dark:text-slate-900 shadow-sm'
+                                        : 'text-rose-600 dark:text-rose-400 hover:bg-rose-50/50 dark:hover:bg-rose-950/20'
                                     }`
                                 }
                             >
                                 Admin Panel
                             </NavLink>
+                        )}
+
+                        <div className="border-t border-sand-300/40 dark:border-slate-800/40 my-2"></div>
+
+                        {user ? (
+                            <div className="flex flex-col space-y-2">
+                                {/* Mobile User Info Card */}
+                                <div className="flex items-center space-x-3 px-4 py-3 bg-sand-200/30 dark:bg-slate-800/30 rounded-xl">
+                                    <div className="w-9 h-9 rounded-full border border-sand-300 dark:border-slate-700 overflow-hidden bg-warm-dark text-white flex items-center justify-center text-[10px] font-black">
+                                        {user.profilePic ? (
+                                            <img src={user.profilePic} alt={user.userName || 'Profile'} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <span>{user.userName?.slice(0, 2)?.toUpperCase() || 'U'}</span>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs font-bold text-warm-dark dark:text-slate-200 truncate">{user.userName}</p>
+                                        <p className="text-[10px] text-warm-dark/50 dark:text-slate-400 truncate">{user.email || 'Member'}</p>
+                                    </div>
+                                </div>
+
+                                <NavLink
+                                    to="/user-dashboard"
+                                    onClick={() => setIsOpen(false)}
+                                    className={({ isActive }) =>
+                                        `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
+                                            ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                            : 'text-warm-dark/80 dark:text-slate-300 hover:bg-sand-200/50 dark:hover:bg-slate-800/50'
+                                        }`
+                                    }
+                                >
+                                    My Dashboard
+                                </NavLink>
+
+                                <button
+                                    onClick={() => {
+                                        setIsOpen(false);
+                                        handleLogout();
+                                    }}
+                                    className="w-full px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider text-rose-600 dark:text-rose-455 hover:bg-rose-100/30 dark:hover:bg-rose-950/20 transition-all duration-200 flex items-center justify-center space-x-1.5 cursor-pointer"
+                                >
+                                    <FaSignOutAlt className="text-xs" />
+                                    <span>Logout</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <Link
+                                to="/login"
+                                onClick={() => setIsOpen(false)}
+                                className="w-full px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark hover:bg-warm-accent hover:text-warm-dark dark:hover:bg-warm-accent-hover transition-all duration-200 flex items-center justify-center space-x-1.5 shadow-sm"
+                            >
+                                <FaSignInAlt className="text-xs" />
+                                <span>Login</span>
+                            </Link>
                         )}
                     </div>
                 )}
