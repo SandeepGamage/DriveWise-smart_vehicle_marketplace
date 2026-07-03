@@ -44,17 +44,19 @@ const Navbar = () => {
                             <span>Marketplace</span>
                         </NavLink>
 
-                        <NavLink
-                            to="/create-ad"
-                            className={({ isActive }) =>
-                                `px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5 ${isActive
-                                    ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
-                                    : 'text-warm-dark/70 dark:text-slate-300 hover:text-warm-dark dark:hover:text-white hover:bg-sand-300/40 dark:hover:bg-slate-700/40'
-                                }`
-                            }
-                        >
-                            <span>Sell Car</span>
-                        </NavLink>
+                        {user && (
+                            <NavLink
+                                to="/create-ad"
+                                className={({ isActive }) =>
+                                    `px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider transition-all duration-300 flex items-center space-x-1.5 ${isActive
+                                        ? 'bg-warm-dark dark:bg-warm-accent text-white dark:text-warm-dark shadow-sm'
+                                        : 'text-warm-dark/70 dark:text-slate-300 hover:text-warm-dark dark:hover:text-white hover:bg-sand-300/40 dark:hover:bg-slate-700/40'
+                                    }`
+                                }
+                            >
+                                <span>Sell Car</span>
+                            </NavLink>
+                        )}
 
                         <NavLink
                             to="/valuation"
@@ -147,18 +149,20 @@ const Navbar = () => {
                         >
                             Marketplace
                         </NavLink>
-                        <NavLink
-                            to="/create-ad"
-                            onClick={() => setIsOpen(false)}
-                            className={({ isActive }) =>
-                                `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
-                                    ? 'bg-warm-dark text-white shadow-sm'
-                                    : 'text-warm-dark/80 hover:bg-white/30'
-                                }`
-                            }
-                        >
-                            Sell Car
-                        </NavLink>
+                        {user && (
+                            <NavLink
+                                to="/create-ad"
+                                onClick={() => setIsOpen(false)}
+                                className={({ isActive }) =>
+                                    `px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center ${isActive
+                                        ? 'bg-warm-dark text-white shadow-sm'
+                                        : 'text-warm-dark/80 hover:bg-white/30'
+                                    }`
+                                }
+                            >
+                                Sell Car
+                            </NavLink>
+                        )}
                         <NavLink
                             to="/valuation"
                             onClick={() => setIsOpen(false)}

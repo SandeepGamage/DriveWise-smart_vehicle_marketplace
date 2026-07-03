@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import brandModelMap from '../../utils/brand_model_map.json';
 import sriLankaLocations from '../../utils/sri_lanka_locations.json';
@@ -10,6 +11,7 @@ import { goeyToast } from 'goey-toast';
 
 const CreateAdvertisement = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const storedUserId = user?._id || user?.UID || '';
 
     const [formData, setFormData] = useState({
@@ -43,6 +45,15 @@ const CreateAdvertisement = () => {
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState('');
     const [manualUrl, setManualUrl] = useState('');
+
+    useEffect(() => {
+        if (!user) {
+            goeyToast.error('Authentication Required', {
+                description: 'Please login first to sell a vehicle.'
+            });
+            navigate('/login');
+        }
+    }, [user, navigate]);
 
     useEffect(() => {
         setFormData(prev => ({

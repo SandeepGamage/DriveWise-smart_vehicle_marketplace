@@ -46,7 +46,7 @@ const AdvertisementDetails = () => {
             setLoading(true);
             setErrorMsg('');
             try {
-                const res = await axios.get(`http://localhost:3000/api/advertisement/advertisements/${id}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/advertisement/advertisements/${id}`);
                 if (res.data.success) {
                     setAd(res.data.data);
                 } else {

@@ -52,7 +52,7 @@ const ValuationCalculator = () => {
                     powerHp: Number(calcData.powerHp)
                 };
 
-                const res = await axios.post('http://localhost:3000/api/advertisement/predict-price', payload);
+                const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}/api/advertisement/predict-price`, payload);
                 if (res.data.success) {
                     setPredictedPrice(res.data.predictedPrice);
                 } else {
