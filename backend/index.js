@@ -29,10 +29,14 @@ app.use("/api/advertisement", advertRoutes);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
+    let predictiveServiceURL = process.env.PREDICTION_SERVICE_URL;
+    if (predictiveServiceURL && !predictiveServiceURL.endsWith('/api/predict')) {
+        predictiveServiceURL = predictiveServiceURL.replace(/\/$/, '') + '/api/predict';
+    }
     res.status(200).json({ 
         message: "Server is running",
         timestamp: new Date().toISOString(),
-        predictiveServiceURL: process.env.PREDICTION_SERVICE_URL || 'http://localhost:5000/api/predict'
+        predictiveServiceURL: predictiveServiceURL
     });
 });
 
